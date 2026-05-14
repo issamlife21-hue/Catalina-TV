@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Catalina TV Demo 6.2 — The Waterfront at Catalina Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Barlow+Condensed:wght@300;400;600&family=Barlow:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<div id="demo-tag">Preview · TI Capital · Catalina Landing</div>
+<div id="bg"></div>
+<div id="vig"></div>
+
+<div id="hud">
+  <div id="hud-top">
+    <div id="logo">
+      <div id="logo-name">Catalina Landing</div>
+      <div id="logo-sub">310 – 340 Golden Shore · Long Beach, CA</div>
+    </div>
+    <div id="clock-wrap">
+      <div id="greeting">Welcome</div>
+      <div id="clk-time">--:--</div>
+      <div id="clk-date"></div>
+    </div>
+  </div>
+  <div id="hud-bot">
+    <div id="tabs-wrap">
+      <div class="tab" onclick="goMode(0)">Weather</div>
+      <div class="tab" onclick="goMode(1)">Directory</div>
+      <div class="tab" onclick="goMode(2)">Events</div>
+      <div class="tab" onclick="goMode(3)">Property</div>
+    </div>
+  </div>
+</div>
+
+<div id="panels">
+
+  <!-- WEATHER -->
+  <div class="panel" id="pw">
+    <div id="wx-temp-block">
+      <div id="wx-cond-label">Current · Long Beach, CA</div>
+      <div id="wx-icon" aria-hidden="true"></div>
+      <div id="wx-temp-big">--</div>
+      <div id="wx-unit-big">°F</div>
+      <div id="wx-condition">Loading…</div>
+      <div id="wx-loc-label">Live · Updates every 10 min</div>
+    </div>
+    <div id="wx-right">
+      <div id="wx-stats">
+        <div class="ws"><div class="ws-l">Feels Like</div><div class="ws-v" id="wx-fl">--<span class="ws-u">°</span></div></div>
+        <div class="ws"><div class="ws-l">Humidity</div><div class="ws-v" id="wx-hum">--<span class="ws-u">%</span></div></div>
+        <div class="ws"><div class="ws-l">Wind</div><div class="ws-v" id="wx-wind">--<span class="ws-u">mph</span></div></div>
+        <div class="ws"><div class="ws-l">UV Index</div><div class="ws-v" id="wx-uv">--</div></div>
+      </div>
+      <div id="wx-fc-wrap">
+        <div id="wx-fc-label">4-Day Outlook</div>
+        <div id="wx-fc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTORY -->
+  <div class="panel" id="pdir">
+    <div class="sec-pill">Building Directory</div>
+    <div id="dir-grid"></div>
+    <div id="dir-foot">Leasing Inquiries · NRE Commercial · (424) 477-3816</div>
+  </div>
+
+  <!-- EVENTS -->
+  <div class="panel" id="pevt">
+    <div class="sec-pill">Upcoming Events at Catalina Landing</div>
+    <div id="evt-grid"></div>
+    <div id="evt-foot">Post an Event · TI Capital Management · lobby@ticapital.com</div>
+  </div>
+
+  <!-- PROPERTY PHOTOS -->
+  <div class="panel" id="pphoto">
+    <div id="photo-lower">
+      <div id="photo-pill">
+        <div id="photo-rule"></div>
+        <div id="photo-title">The Waterfront at Catalina Landing</div>
+        <div id="photo-sub">Long Beach, California</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<button id="settings-btn" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+<div id="settings-menu" role="menu">
+  <div class="settings-row">
+    <span class="settings-label">Theme</span>
+    <div class="theme-opts">
+      <button class="theme-opt" data-theme="dark" type="button">Dark</button>
+      <button class="theme-opt" data-theme="light" type="button">Light</button>
+    </div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Corners</span>
+    <div class="theme-opts">
+      <button class="theme-opt" data-corner="default" type="button">Default</button>
+      <button class="theme-opt" data-corner="round" type="button">Round</button>
+    </div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Icons</span>
+    <div class="theme-opts">
+      <button class="theme-opt" data-icons="show" type="button">Show</button>
+      <button class="theme-opt" data-icons="hide" type="button">Hide</button>
+    </div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Events</span>
+    <div class="theme-opts">
+      <button class="theme-opt" data-events-visible="show" type="button">Show</button>
+      <button class="theme-opt" data-events-visible="hide" type="button">Hide</button>
+    </div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Types</span>
+    <div class="theme-opts">
+      <button class="theme-opt" data-freq="weekly" type="button">Weekly</button>
+      <button class="theme-opt" data-freq="daily" type="button">Daily</button>
+      <button class="theme-opt" data-freq="monthly" type="button">Monthly</button>
+    </div>
+  </div>
+  <div class="settings-sep"></div>
+  <button id="edit-events-btn" class="settings-action" type="button">Edit Events</button>
+  <button id="edit-directory-btn" class="settings-action" type="button">Edit Directory</button>
+  <button id="edit-info-btn" class="settings-action" type="button">Edit Building Info</button>
+</div>
+
+<div id="eed-backdrop"></div>
+
+<div id="info-editor" role="dialog" aria-modal="true" aria-labelledby="ied-heading">
+  <div id="ied-modal">
+    <div id="ied-header">
+      <h2 id="ied-heading">Edit Building Info</h2>
+      <button id="ied-close" type="button" aria-label="Close">&times;</button>
+    </div>
+    <p id="ied-intro">Edit the building name, address, footer contact lines, and the Property panel title shown throughout the display.</p>
+    <div id="info-editor-grid"></div>
+    <div id="ied-footer">
+      <button id="ied-reset" type="button">Reset to defaults</button>
+      <div id="ied-footer-right">
+        <button id="ied-cancel" type="button">Cancel</button>
+        <button id="ied-save" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="dir-editor" role="dialog" aria-modal="true" aria-labelledby="ded-heading">
+  <div id="ded-modal">
+    <div id="ded-header">
+      <h2 id="ded-heading">Edit Directory</h2>
+      <button id="ded-close" type="button" aria-label="Close">&times;</button>
+    </div>
+    <p id="ded-intro">Add or remove tenants and spaces, edit the building number/street, and pick the floor from dropdowns to avoid typos.</p>
+    <div id="dir-editor-grid"></div>
+    <div id="ded-footer">
+      <button id="ded-reset" type="button">Reset to defaults</button>
+      <div id="ded-footer-right">
+        <button id="ded-cancel" type="button">Cancel</button>
+        <button id="ded-save" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="evt-editor" role="dialog" aria-modal="true" aria-labelledby="eed-heading">
+  <div id="eed-modal">
+    <div id="eed-header">
+      <h2 id="eed-heading">Edit Events</h2>
+      <button id="eed-close" type="button" aria-label="Close">&times;</button>
+    </div>
+    <p id="eed-intro">Replace the text for any of the three event cards. Changes save to this device.</p>
+    <div id="evt-editor-grid"></div>
+    <div id="eed-footer">
+      <button id="eed-reset" type="button">Reset to defaults</button>
+      <div id="eed-footer-right">
+        <button id="eed-cancel" type="button">Cancel</button>
+        <button id="eed-save" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/background.js"></script>
+<script src="js/modes.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/events.js"></script>
+<script src="js/directory.js"></script>
+<script src="js/info.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
