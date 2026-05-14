@@ -9,6 +9,7 @@ function activateCursor(){
 document.addEventListener('mousemove',activateCursor);
 document.addEventListener('mousedown',activateCursor);
 
+initPasscode();
 initSettings();
 applyInfo();
 

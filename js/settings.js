@@ -1,34 +1,44 @@
+function _setSwitch(key,on){
+  const sw=document.querySelector(`.ios-switch[data-toggle="${key}"]`);
+  if(sw) sw.setAttribute('aria-pressed',on?'true':'false');
+}
+
 function applyTheme(theme){
-  document.body.classList.toggle('light',theme==='light');
-  document.querySelectorAll('[data-theme]').forEach(opt=>{
-    opt.classList.toggle('active',opt.dataset.theme===theme);
+  if(theme!=='light'&&theme!=='navy') theme='dark';
+  document.body.classList.remove('light','navy');
+  if(theme==='light') document.body.classList.add('light');
+  else if(theme==='navy') document.body.classList.add('navy');
+  document.querySelectorAll('[data-theme]').forEach(c=>{
+    c.classList.toggle('active',c.dataset.theme===theme);
   });
   try{localStorage.setItem('catalina-theme',theme);}catch(e){}
 }
 
 function applyCorner(corner){
-  document.body.classList.toggle('rounded',corner==='round');
-  document.querySelectorAll('[data-corner]').forEach(opt=>{
-    opt.classList.toggle('active',opt.dataset.corner===corner);
-  });
-  try{localStorage.setItem('catalina-corner',corner);}catch(e){}
+  const isRound=corner==='round';
+  document.body.classList.toggle('rounded',isRound);
+  _setSwitch('round',isRound);
+  try{localStorage.setItem('catalina-corner',isRound?'round':'default');}catch(e){}
 }
 
 function applyWeatherIcons(state){
-  const hide=state==='hide';
-  document.body.classList.toggle('no-weather-icons',hide);
-  document.querySelectorAll('[data-icons]').forEach(opt=>{
-    opt.classList.toggle('active',opt.dataset.icons===state);
-  });
-  try{localStorage.setItem('catalina-icons',state);}catch(e){}
+  const show=state==='show';
+  document.body.classList.toggle('no-weather-icons',!show);
+  _setSwitch('icons',show);
+  try{localStorage.setItem('catalina-icons',show?'show':'hide');}catch(e){}
+}
+
+function applyDaylight(state){
+  const on=state==='on'||state===true;
+  document.body.classList.toggle('daylight',on);
+  _setSwitch('daylight',on);
+  try{localStorage.setItem('catalina-daylight',on?'on':'off');}catch(e){}
 }
 
 function applyEventsVisibility(state){
   const visible=state==='show';
   document.body.classList.toggle('events-hidden',!visible);
-  document.querySelectorAll('[data-events-visible]').forEach(opt=>{
-    opt.classList.toggle('active',opt.dataset.eventsVisible===state);
-  });
+  _setSwitch('events',visible);
   try{localStorage.setItem('catalina-events-enabled',visible?'true':'false');}catch(e){}
   if(!visible&&typeof curMode!=='undefined'&&curMode===2&&typeof goMode==='function'){
     goMode(getNextMode(2));
@@ -53,6 +63,21 @@ function refreshFreqChips(){
   });
 }
 
+function _updateFullscreenLabel(){
+  const lab=document.getElementById('fullscreen-label');
+  if(!lab) return;
+  lab.textContent=document.fullscreenElement?'Exit Fullscreen':'Enter Fullscreen';
+}
+
+function toggleFullscreen(){
+  if(!document.fullscreenElement){
+    const el=document.documentElement;
+    if(el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  }else{
+    if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  }
+}
+
 function initSettings(){
   const btn=document.getElementById('settings-btn');
   const menu=document.getElementById('settings-menu');
@@ -62,26 +87,42 @@ function initSettings(){
   applyCorner(read('catalina-corner')||'default');
   applyWeatherIcons(read('catalina-icons')==='hide'?'hide':'show');
   applyEventsVisibility(read('catalina-events-enabled')==='false'?'hide':'show');
+  applyDaylight(read('catalina-daylight')==='on'?'on':'off');
   refreshFreqChips();
+  _updateFullscreenLabel();
 
   btn.addEventListener('click',e=>{
     e.stopPropagation();
-    const open=menu.classList.toggle('open');
-    btn.setAttribute('aria-expanded',open?'true':'false');
+    if(menu.classList.contains('open')){
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+      return;
+    }
+    requireUnlock(()=>{
+      menu.classList.add('open');
+      btn.setAttribute('aria-expanded','true');
+    });
   });
 
-  document.querySelectorAll('[data-theme]').forEach(opt=>{
-    opt.addEventListener('click',e=>{e.stopPropagation();applyTheme(opt.dataset.theme);});
+  document.querySelectorAll('.ios-switch').forEach(sw=>{
+    sw.addEventListener('click',e=>{
+      e.stopPropagation();
+      const key=sw.dataset.toggle;
+      const isOn=sw.getAttribute('aria-pressed')==='true';
+      if(key==='round') applyCorner(isOn?'default':'round');
+      else if(key==='icons') applyWeatherIcons(isOn?'hide':'show');
+      else if(key==='events') applyEventsVisibility(isOn?'hide':'show');
+      else if(key==='daylight') applyDaylight(!isOn);
+    });
   });
-  document.querySelectorAll('[data-corner]').forEach(opt=>{
-    opt.addEventListener('click',e=>{e.stopPropagation();applyCorner(opt.dataset.corner);});
+
+  document.querySelectorAll('[data-theme]').forEach(chip=>{
+    chip.addEventListener('click',e=>{
+      e.stopPropagation();
+      applyTheme(chip.dataset.theme);
+    });
   });
-  document.querySelectorAll('[data-icons]').forEach(opt=>{
-    opt.addEventListener('click',e=>{e.stopPropagation();applyWeatherIcons(opt.dataset.icons);});
-  });
-  document.querySelectorAll('[data-events-visible]').forEach(opt=>{
-    opt.addEventListener('click',e=>{e.stopPropagation();applyEventsVisibility(opt.dataset.eventsVisible);});
-  });
+
   document.querySelectorAll('[data-freq]').forEach(chip=>{
     chip.addEventListener('click',e=>{
       e.stopPropagation();
@@ -89,6 +130,13 @@ function initSettings(){
       applyFreqFilter(chip.dataset.freq,filters[chip.dataset.freq]===false);
     });
   });
+
+  const fsBtn=document.getElementById('fullscreen-btn');
+  if(fsBtn) fsBtn.addEventListener('click',e=>{e.stopPropagation();toggleFullscreen();});
+  document.addEventListener('fullscreenchange',_updateFullscreenLabel);
+
+  const pcBtn=document.getElementById('change-pc-btn');
+  if(pcBtn) pcBtn.addEventListener('click',e=>{e.stopPropagation();promptChangePasscode();});
 
   document.addEventListener('click',e=>{
     if(!menu.contains(e.target)&&!btn.contains(e.target)){

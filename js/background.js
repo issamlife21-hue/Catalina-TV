@@ -1,22 +1,40 @@
 let bgIdx=0;
 const bgSlides=[];
+let bgCurLane=0;
+let bgEl=null;
+
+function preloadBg(url){
+  const img=new Image();
+  img.src=url;
+}
 
 function initBackground(){
-  const bgEl=document.getElementById('bg');
-  PHOTOS.forEach((url,i)=>{
+  bgEl=document.getElementById('bg');
+  for(let i=0;i<2;i++){
     const d=document.createElement('div');
     d.className='bgs';
-    d.style.backgroundImage=`url('${url}')`;
-    if(i===0)d.classList.add('on');
     bgEl.appendChild(d);
     bgSlides.push(d);
-  });
-  setInterval(()=>{
-    bgSlides[bgIdx].classList.remove('on');
-    bgIdx=(bgIdx+1)%bgSlides.length;
-    const s=bgSlides[bgIdx];
-    s.style.animation='none';s.offsetWidth;
-    s.style.animation='kb 18s ease-in-out forwards';
-    s.classList.add('on');
-  },9000);
+  }
+  bgSlides[0].style.backgroundImage=`url('${PHOTOS[0]}')`;
+  bgSlides[0].classList.add('on');
+  preloadBg(PHOTOS[1%PHOTOS.length]);
+  setInterval(advanceBackground,9000);
+}
+
+function advanceBackground(){
+  const nextIdx=(bgIdx+1)%PHOTOS.length;
+  const nextLane=1-bgCurLane;
+  const cur=bgSlides[bgCurLane];
+  const next=bgSlides[nextLane];
+  next.style.backgroundImage=`url('${PHOTOS[nextIdx]}')`;
+  bgEl.appendChild(next);
+  next.style.animation='none';
+  void next.offsetWidth;
+  next.style.animation='kb 18s ease-in-out forwards';
+  cur.classList.remove('on');
+  next.classList.add('on');
+  bgIdx=nextIdx;
+  bgCurLane=nextLane;
+  preloadBg(PHOTOS[(nextIdx+1)%PHOTOS.length]);
 }

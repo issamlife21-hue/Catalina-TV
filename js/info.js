@@ -1,9 +1,8 @@
 const DEFAULT_INFO={
   logoName:'Catalina Landing',
   logoSub:'310 – 340 Golden Shore · Long Beach, CA',
-  demoTag:'Preview · TI Capital · Catalina Landing',
   dirFoot:'Leasing Inquiries · NRE Commercial · (424) 477-3816',
-  evtFoot:'Post an Event · TI Capital Management · lobby@ticapital.com',
+  evtFoot:'Post an Event · lobby@ticapital.com',
   photoTitle:'The Waterfront at Catalina Landing',
   photoSub:'Long Beach, California'
 };
@@ -11,7 +10,6 @@ const DEFAULT_INFO={
 const INFO_FIELDS=[
   ['logoName','Logo · Main Title','Building name shown top-left'],
   ['logoSub','Logo · Subtitle','Address line under the logo'],
-  ['demoTag','Top-Center Tag','Small badge at the very top of the screen'],
   ['dirFoot','Directory Footer','Leasing line below the directory cards'],
   ['evtFoot','Events Footer','Contact line below the event cards'],
   ['photoTitle','Property Panel · Title','Main title on the Property photo panel'],
@@ -23,7 +21,13 @@ function loadInfo(){
     const raw=localStorage.getItem('catalina-info-v1');
     if(raw){
       const parsed=JSON.parse(raw);
-      if(parsed&&typeof parsed==='object') return {...DEFAULT_INFO,...parsed};
+      if(parsed&&typeof parsed==='object'){
+        if(parsed.evtFoot&&parsed.evtFoot.includes('TI Capital Management')){
+          parsed.evtFoot=parsed.evtFoot.replace(/\s*·\s*TI Capital Management/g,'').trim();
+        }
+        delete parsed.demoTag;
+        return {...DEFAULT_INFO,...parsed};
+      }
     }
   }catch(e){}
   return {...DEFAULT_INFO};
@@ -38,7 +42,6 @@ function applyInfo(){
   const set=(id,val)=>{const el=document.getElementById(id);if(el) el.textContent=val;};
   set('logo-name',info.logoName);
   set('logo-sub',info.logoSub);
-  set('demo-tag',info.demoTag);
   set('dir-foot',info.dirFoot);
   set('evt-foot',info.evtFoot);
   set('photo-title',info.photoTitle);

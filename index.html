@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Catalina TV Demo 6.2 — The Waterfront at Catalina Landing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Barlow+Condensed:wght@300;400;600&family=Barlow:wght@300;400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
 
-<div id="demo-tag">Preview · TI Capital · Catalina Landing</div>
 <div id="bg"></div>
 <div id="vig"></div>
 
 <div id="hud">
   <div id="hud-top">
     <div id="logo">
-      <div id="logo-name">Catalina Landing</div>
+      <img id="logo-img" src="assets/images/logo.png" alt="Catalina Landing"/>
+      <div id="logo-name" hidden>Catalina Landing</div>
       <div id="logo-sub">310 – 340 Golden Shore · Long Beach, CA</div>
     </div>
     <div id="clock-wrap">
@@ -46,19 +46,16 @@
       <div id="wx-temp-big">--</div>
       <div id="wx-unit-big">°F</div>
       <div id="wx-condition">Loading…</div>
-      <div id="wx-loc-label">Live · Updates every 10 min</div>
-    </div>
-    <div id="wx-right">
       <div id="wx-stats">
         <div class="ws"><div class="ws-l">Feels Like</div><div class="ws-v" id="wx-fl">--<span class="ws-u">°</span></div></div>
         <div class="ws"><div class="ws-l">Humidity</div><div class="ws-v" id="wx-hum">--<span class="ws-u">%</span></div></div>
         <div class="ws"><div class="ws-l">Wind</div><div class="ws-v" id="wx-wind">--<span class="ws-u">mph</span></div></div>
         <div class="ws"><div class="ws-l">UV Index</div><div class="ws-v" id="wx-uv">--</div></div>
       </div>
-      <div id="wx-fc-wrap">
-        <div id="wx-fc-label">4-Day Outlook</div>
-        <div id="wx-fc"></div>
-      </div>
+    </div>
+    <div id="wx-fc-col">
+      <div id="wx-fc-label">4-Day Outlook</div>
+      <div id="wx-fc"></div>
     </div>
   </div>
 
@@ -73,7 +70,7 @@
   <div class="panel" id="pevt">
     <div class="sec-pill">Upcoming Events at Catalina Landing</div>
     <div id="evt-grid"></div>
-    <div id="evt-foot">Post an Event · TI Capital Management · lobby@ticapital.com</div>
+    <div id="evt-foot">Post an Event · lobby@ticapital.com</div>
   </div>
 
   <!-- PROPERTY PHOTOS -->
@@ -96,49 +93,80 @@
   </svg>
 </button>
 <div id="settings-menu" role="menu">
-  <div class="settings-row">
-    <span class="settings-label">Theme</span>
-    <div class="theme-opts">
-      <button class="theme-opt" data-theme="dark" type="button">Dark</button>
-      <button class="theme-opt" data-theme="light" type="button">Light</button>
+  <div class="settings-header">Settings</div>
+
+  <div class="settings-group">
+    <div class="settings-row settings-stack">
+      <span class="settings-label">Theme</span>
+      <div class="chips-row">
+        <button class="theme-opt" data-theme="dark" type="button">Dark</button>
+        <button class="theme-opt" data-theme="light" type="button">Light</button>
+        <button class="theme-opt" data-theme="navy" type="button">Navy</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Rounded Corners</span>
+      <button class="ios-switch" data-toggle="round" type="button" aria-pressed="false"></button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Weather Icons</span>
+      <button class="ios-switch" data-toggle="icons" type="button" aria-pressed="true"></button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Show Events</span>
+      <button class="ios-switch" data-toggle="events" type="button" aria-pressed="true"></button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Daylight Mode</span>
+      <button class="ios-switch" data-toggle="daylight" type="button" aria-pressed="false"></button>
     </div>
   </div>
-  <div class="settings-row">
-    <span class="settings-label">Corners</span>
-    <div class="theme-opts">
-      <button class="theme-opt" data-corner="default" type="button">Default</button>
-      <button class="theme-opt" data-corner="round" type="button">Round</button>
+
+  <div class="settings-divider"></div>
+
+  <div class="settings-group">
+    <div class="settings-row settings-stack">
+      <span class="settings-label">Event Types</span>
+      <div class="chips-row">
+        <button class="theme-opt" data-freq="weekly" type="button">Weekly</button>
+        <button class="theme-opt" data-freq="daily" type="button">Daily</button>
+        <button class="theme-opt" data-freq="monthly" type="button">Monthly</button>
+      </div>
     </div>
   </div>
-  <div class="settings-row">
-    <span class="settings-label">Icons</span>
-    <div class="theme-opts">
-      <button class="theme-opt" data-icons="show" type="button">Show</button>
-      <button class="theme-opt" data-icons="hide" type="button">Hide</button>
-    </div>
+
+  <div class="settings-divider"></div>
+
+  <div class="settings-group">
+    <button id="edit-events-btn" class="settings-action" type="button"><span>Edit Events</span><span class="chevron">›</span></button>
+    <button id="edit-directory-btn" class="settings-action" type="button"><span>Edit Directory</span><span class="chevron">›</span></button>
+    <button id="edit-info-btn" class="settings-action" type="button"><span>Edit Building Info</span><span class="chevron">›</span></button>
   </div>
-  <div class="settings-row">
-    <span class="settings-label">Events</span>
-    <div class="theme-opts">
-      <button class="theme-opt" data-events-visible="show" type="button">Show</button>
-      <button class="theme-opt" data-events-visible="hide" type="button">Hide</button>
-    </div>
+
+  <div class="settings-divider"></div>
+
+  <div class="settings-group">
+    <button id="fullscreen-btn" class="settings-action" type="button"><span id="fullscreen-label">Enter Fullscreen</span><span class="chevron">⛶</span></button>
+    <button id="change-pc-btn" class="settings-action" type="button"><span>Change Passcode</span><span class="chevron">›</span></button>
   </div>
-  <div class="settings-row">
-    <span class="settings-label">Types</span>
-    <div class="theme-opts">
-      <button class="theme-opt" data-freq="weekly" type="button">Weekly</button>
-      <button class="theme-opt" data-freq="daily" type="button">Daily</button>
-      <button class="theme-opt" data-freq="monthly" type="button">Monthly</button>
-    </div>
-  </div>
-  <div class="settings-sep"></div>
-  <button id="edit-events-btn" class="settings-action" type="button">Edit Events</button>
-  <button id="edit-directory-btn" class="settings-action" type="button">Edit Directory</button>
-  <button id="edit-info-btn" class="settings-action" type="button">Edit Building Info</button>
 </div>
 
 <div id="eed-backdrop"></div>
+
+<div id="passcode-modal" role="dialog" aria-modal="true">
+  <div class="pc-shell">
+    <div id="pc-title" class="pc-title">Enter Passcode</div>
+    <div id="pc-sub" class="pc-sub"></div>
+    <div class="pc-dots">
+      <span class="pc-dot"></span>
+      <span class="pc-dot"></span>
+      <span class="pc-dot"></span>
+      <span class="pc-dot"></span>
+    </div>
+    <input type="password" inputmode="numeric" maxlength="4" id="pc-input" autocomplete="off" aria-label="Passcode"/>
+    <button id="pc-cancel" type="button" class="pc-cancel">Cancel</button>
+  </div>
+</div>
 
 <div id="info-editor" role="dialog" aria-modal="true" aria-labelledby="ied-heading">
   <div id="ied-modal">
@@ -202,6 +230,7 @@
 <script src="js/events.js"></script>
 <script src="js/directory.js"></script>
 <script src="js/info.js"></script>
+<script src="js/passcode.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/main.js"></script>
 </body>
