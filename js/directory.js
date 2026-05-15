@@ -88,10 +88,107 @@ function formatFloor(entry){
   }
 }
 
+// ---------- Live Google Sheet sync ----------
+const SHEET_CSV_URL='https://docs.google.com/spreadsheets/d/17Uze4Qz_0cXsnj4KS4cFmabK67F_jGG0PR_vtnegrK4/export?format=csv&gid=0';
+const SHEET_REFRESH_MS=5*60*1000;
+const SHEET_CACHE_KEY='catalina-directory-sheet-cache-v1';
+const BUILDING_HEADER_RE=/^\s*(\d{3})\s+GOLDEN\s+SHORE\s*$/i;
+const VACANT_RE=/^\s*VACANT\s+OFFICES/i;
+
+let _liveDirectory=null;
+let _liveSyncStarted=false;
+
+function parseCSV(text){
+  const rows=[];
+  let row=[];
+  let field='';
+  let inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQuotes){
+      if(c==='"'){
+        if(text[i+1]==='"'){ field+='"'; i++; }
+        else inQuotes=false;
+      } else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+      else if(c==='\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+
+function parseSheetCSV(text){
+  const rows=parseCSV(text);
+  const buildings=new Map();
+  const active=new Map(); // col-index → building num
+  for(const row of rows){
+    if(row.some(cell=>VACANT_RE.test(cell||''))) break;
+    let foundHeader=false;
+    for(let c=0;c<row.length;c++){
+      const m=BUILDING_HEADER_RE.exec(row[c]||'');
+      if(m){
+        foundHeader=true;
+        const num=m[1];
+        active.set(c,num);
+        if(!buildings.has(num)) buildings.set(num,{num,street:'Golden Shore',entries:[]});
+      }
+    }
+    if(foundHeader) continue;
+    if(row.some(cell=>/^\s*TENANT\s*$/i.test(cell||''))) continue;
+    for(const [c,num] of active){
+      const name=(row[c]||'').trim();
+      const suite=(row[c+1]||'').trim();
+      if(!name||!suite) continue;
+      buildings.get(num).entries.push({name, floorType:'custom', floorCustom:suite});
+    }
+  }
+  return Array.from(buildings.values());
+}
+
+function getEffectiveDirectory(){
+  if(_liveDirectory) return _liveDirectory;
+  try{
+    const raw=localStorage.getItem(SHEET_CACHE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed)&&parsed.length) return parsed.map(normalizeBuilding);
+    }
+  }catch(e){}
+  return loadDirectory();
+}
+
+async function fetchDirectoryFromSheet(){
+  try{
+    const res=await fetch(SHEET_CSV_URL,{cache:'no-store'});
+    if(!res.ok) throw new Error('http '+res.status);
+    const text=await res.text();
+    const parsed=parseSheetCSV(text);
+    if(!parsed.length) throw new Error('no buildings parsed');
+    _liveDirectory=parsed.map(normalizeBuilding);
+    try{localStorage.setItem(SHEET_CACHE_KEY,JSON.stringify(_liveDirectory));}catch(e){}
+    renderDirectory();
+  }catch(err){
+    console.warn('[directory] live sheet fetch failed; using cache/fallback:',err);
+  }
+}
+
+function startDirectoryLiveSync(){
+  if(_liveSyncStarted) return;
+  _liveSyncStarted=true;
+  fetchDirectoryFromSheet();
+  setInterval(fetchDirectoryFromSheet,SHEET_REFRESH_MS);
+}
+
 function renderDirectory(){
+  startDirectoryLiveSync();
   const grid=document.getElementById('dir-grid');
   if(!grid) return;
-  const directory=loadDirectory();
+  const directory=getEffectiveDirectory();
   grid.innerHTML='';
   directory.forEach(building=>{
     const card=document.createElement('div');
