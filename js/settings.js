@@ -4,10 +4,11 @@ function _setSwitch(key,on){
 }
 
 function applyTheme(theme){
-  if(theme!=='light'&&theme!=='navy') theme='dark';
-  document.body.classList.remove('light','navy');
+  if(theme!=='light'&&theme!=='navy'&&theme!=='og') theme='dark';
+  document.body.classList.remove('light','navy','og');
   if(theme==='light') document.body.classList.add('light');
   else if(theme==='navy') document.body.classList.add('navy');
+  else if(theme==='og') document.body.classList.add('og');
   document.querySelectorAll('[data-theme]').forEach(c=>{
     c.classList.toggle('active',c.dataset.theme===theme);
   });
