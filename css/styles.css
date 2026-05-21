@@ -215,9 +215,8 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 #dir-foot{
   margin-top:14px;
   padding:11px 26px;
-  font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:0.28em;color:var(--gold);text-transform:uppercase;
+  font-family:var(--font-display);font-weight:600;font-size:18px;letter-spacing:0.26em;color:#d8b267;text-transform:uppercase;
 }
-#dir-foot-phone{font-weight:700;letter-spacing:0.22em;color:#e7c878}
 
 /* ════ EVENTS ════ */
 #pevt{flex-direction:column;align-items:center;justify-content:center}
