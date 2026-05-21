@@ -163,10 +163,7 @@ function renderDirectory(){
     const num=document.createElement('div');
     num.className='db-num';
     num.textContent=building.num;
-    const street=document.createElement('div');
-    street.className='db-street';
-    street.textContent=building.street;
-    head.append(num,street);
+    head.append(num);
     card.appendChild(head);
 
     building.entries.forEach(entry=>{

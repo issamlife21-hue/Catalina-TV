@@ -1,6 +1,6 @@
 const DEFAULT_INFO={
-  logoName:'Catalina Landing',
-  logoSub:'310 – 340 Golden Shore · Long Beach, CA',
+  logoName:'The Waterfront',
+  logoSub:'at Catalina Landing',
   dirFoot:'Leasing Inquiries · (424) 477-3816',
   evtFoot:'Post an Event · lobby@ticapital.com',
   photoTitle:'The Waterfront at Catalina Landing',
@@ -27,6 +27,12 @@ function loadInfo(){
         }
         if(parsed.dirFoot&&parsed.dirFoot.includes('NRE Commercial')){
           parsed.dirFoot=parsed.dirFoot.replace(/\s*·\s*NRE Commercial/g,'').trim();
+        }
+        if(parsed.logoSub&&/Golden\s+Shore|Long\s+Beach/i.test(parsed.logoSub)){
+          parsed.logoSub='at Catalina Landing';
+        }
+        if(parsed.logoName==='Catalina Landing'){
+          parsed.logoName='The Waterfront';
         }
         delete parsed.demoTag;
         return {...DEFAULT_INFO,...parsed};

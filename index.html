@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"/>
 <title>Catalina TV Demo 6.2 — The Waterfront at Catalina Landing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@300;400;500;600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&family=Hind:wght@300;400;500;600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
@@ -17,9 +17,12 @@
 <div id="hud">
   <div id="hud-top">
     <div id="logo">
-      <img id="logo-img" src="assets/images/logo.png" alt="Catalina Landing"/>
-      <div id="logo-name" hidden>Catalina Landing</div>
-      <div id="logo-sub">310 – 340 Golden Shore · Long Beach, CA</div>
+      <!-- DEMO LOGO: temporary placeholder mark. Swap the src below to install the real logo. -->
+      <img id="logo-mark" src="assets/images/demo-logo.svg" alt="" data-demo="true"/>
+      <div id="logo-text">
+        <div id="logo-name">The Waterfront</div>
+        <div id="logo-sub">at Catalina Landing</div>
+      </div>
     </div>
     <div id="clock-wrap">
       <div id="greeting">Welcome</div>
@@ -44,8 +47,10 @@
     <div id="wx-temp-block">
       <div id="wx-cond-label">Current · Long Beach, CA</div>
       <div id="wx-icon" aria-hidden="true"></div>
-      <div id="wx-temp-big">--</div>
-      <div id="wx-unit-big">°F</div>
+      <div id="wx-temp-row">
+        <div id="wx-temp-big">--</div>
+        <div id="wx-unit-big">°F</div>
+      </div>
       <div id="wx-condition">Loading…</div>
       <div id="wx-stats">
         <div class="ws"><div class="ws-l">Feels Like</div><div class="ws-v" id="wx-fl">--<span class="ws-u">°</span></div></div>
