@@ -5,8 +5,11 @@ let bgEl=null;
 
 const BG_SHEET_REFRESH_MS=10*60*1000;
 const BG_SHEET_CACHE_KEY='catalina-backgrounds-sheet-cache-v1';
+const BG_FAIL_DELAYS=[30000,60000,120000];
 let _livePhotos=null;
 let _bgSyncStarted=false;
+let _bgFailCount=0;
+let _bgFailTimer=null;
 
 function parseBackgroundsCSV(text){
   const rows=parseCSV(text);
@@ -45,17 +48,22 @@ async function fetchBackgroundsFromSheet(){
   if(!BG_SHEET_GID) return;
   const url=`https://docs.google.com/spreadsheets/d/${BG_SHEET_ID}/export?format=csv&gid=${BG_SHEET_GID}`;
   try{
-    const res=await fetch(url,{cache:'no-store'});
+    const res=await fetchWithTimeout(url,15000);
     if(!res.ok) throw new Error('http '+res.status);
     const text=await res.text();
     const parsed=parseBackgroundsCSV(text);
     if(!parsed.length) throw new Error('no photos parsed');
     _livePhotos=parsed;
     try{localStorage.setItem(BG_SHEET_CACHE_KEY,JSON.stringify(parsed));}catch(e){}
-    preloadBg(parsed[0]);
-    if(parsed.length>1) preloadBg(parsed[1]);
+    try{ preloadBg(parsed[0]); if(parsed.length>1) preloadBg(parsed[1]); }catch(e){}
+    _bgFailCount=0;
+    if(_bgFailTimer){ clearTimeout(_bgFailTimer); _bgFailTimer=null; }
   }catch(err){
     console.warn('[background] live sheet fetch failed; using cache/fallback:',err);
+    const delay=BG_FAIL_DELAYS[Math.min(_bgFailCount,BG_FAIL_DELAYS.length-1)];
+    _bgFailCount++;
+    if(_bgFailTimer) clearTimeout(_bgFailTimer);
+    _bgFailTimer=setTimeout(fetchBackgroundsFromSheet,delay);
   }
 }
 

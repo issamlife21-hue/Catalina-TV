@@ -73,9 +73,12 @@ const SHEET_REFRESH_MS=10*60*1000;
 const SHEET_CACHE_KEY='catalina-directory-sheet-cache-v1';
 const BUILDING_HEADER_RE=/^\s*(\d{3})\s+GOLDEN\s+SHORE\s*$/i;
 const VACANT_RE=/^\s*VACANT\s+OFFICES/i;
+const DIR_FAIL_DELAYS=[30000,60000,120000];
 
 let _liveDirectory=null;
 let _liveSyncStarted=false;
+let _dirFailCount=0;
+let _dirFailTimer=null;
 
 function parseSheetCSV(text){
   const rows=parseCSV(text);
@@ -119,16 +122,22 @@ function getEffectiveDirectory(){
 
 async function fetchDirectoryFromSheet(){
   try{
-    const res=await fetch(SHEET_CSV_URL,{cache:'no-store'});
+    const res=await fetchWithTimeout(SHEET_CSV_URL,15000);
     if(!res.ok) throw new Error('http '+res.status);
     const text=await res.text();
     const parsed=parseSheetCSV(text);
     if(!parsed.length) throw new Error('no buildings parsed');
     _liveDirectory=parsed.map(normalizeBuilding);
     try{localStorage.setItem(SHEET_CACHE_KEY,JSON.stringify(_liveDirectory));}catch(e){}
-    renderDirectory();
+    try{ renderDirectory(); }catch(e){ console.warn('[directory] render error:',e); }
+    _dirFailCount=0;
+    if(_dirFailTimer){ clearTimeout(_dirFailTimer); _dirFailTimer=null; }
   }catch(err){
     console.warn('[directory] live sheet fetch failed; using cache/fallback:',err);
+    const delay=DIR_FAIL_DELAYS[Math.min(_dirFailCount,DIR_FAIL_DELAYS.length-1)];
+    _dirFailCount++;
+    if(_dirFailTimer) clearTimeout(_dirFailTimer);
+    _dirFailTimer=setTimeout(fetchDirectoryFromSheet,delay);
   }
 }
 

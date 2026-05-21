@@ -25,3 +25,58 @@ initBackground();
 loadWeather();
 
 goMode(0);
+
+// ---------- 24/7 lifecycle hardening ----------
+const PAGE_LOADED_AT=Date.now();
+
+function _safe(fn){ try{ if(typeof fn==='function') fn(); }catch(e){ console.warn('[lifecycle]',e); } }
+
+function _nudgeAllSyncs(){
+  _safe(typeof fetchEventsFromSheet==='function'?fetchEventsFromSheet:null);
+  _safe(typeof fetchBackgroundsFromSheet==='function'?fetchBackgroundsFromSheet:null);
+  _safe(typeof fetchDirectoryFromSheet==='function'?fetchDirectoryFromSheet:null);
+  _safe(typeof loadWeather==='function'?loadWeather:null);
+}
+
+window.addEventListener('online',()=>{
+  console.info('[lifecycle] online; refreshing data');
+  _nudgeAllSyncs();
+});
+
+let _lastVisibleRefreshAt=Date.now();
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    if(Date.now()-_lastVisibleRefreshAt>5*60*1000){
+      _lastVisibleRefreshAt=Date.now();
+      _nudgeAllSyncs();
+    }
+  }
+});
+
+// Mode rotation watchdog: if no mode change in 2x the longest panel duration, force advance.
+setInterval(()=>{
+  try{
+    if(typeof curMode==='undefined'||typeof DURS==='undefined') return;
+    const maxDur=Math.max.apply(null,DURS);
+    const stuckThreshold=maxDur*2+5000;
+    const elapsed=Date.now()-(typeof _lastModeChangeAt==='number'?_lastModeChangeAt:0);
+    if(elapsed>stuckThreshold){
+      console.warn('[watchdog] mode rotation stuck for',elapsed,'ms; forcing next');
+      goMode((curMode+1)%MODES.length);
+    }
+  }catch(e){ console.warn('[watchdog] error:',e); }
+},10000);
+
+// Controlled daily reload at ~3am local, only after >=6h uptime.
+(function scheduleDailyReload(){
+  try{
+    const minUptime=6*60*60*1000;
+    const now=new Date();
+    const next=new Date(now);
+    next.setHours(3,0,0,0);
+    while(next-now<minUptime) next.setDate(next.getDate()+1);
+    const ms=next-now;
+    setTimeout(()=>{ try{ location.reload(); }catch(e){} },ms);
+    console.info('[lifecycle] daily reload scheduled in',Math.round(ms/60000),'min');
+  }catch(e){ console.warn('[lifecycle] reload schedule error:',e); }
+})();

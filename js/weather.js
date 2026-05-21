@@ -35,7 +35,7 @@ function scheduleNextWeather(delay){
 
 async function loadWeather(){
   try{
-    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=33.7701&longitude=-118.1937&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,uv_index,surface_pressure&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=5');
+    const r=await fetchWithTimeout('https://api.open-meteo.com/v1/forecast?latitude=33.7701&longitude=-118.1937&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,uv_index,surface_pressure&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FLos_Angeles&forecast_days=5',15000);
     if(!r.ok) throw new Error('http '+r.status);
     const d=await r.json();const c=d.current;
     const target=Math.round(c.temperature_2m);

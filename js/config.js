@@ -40,6 +40,17 @@ const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MODES=['pw','pdir','pevt','pphoto'];
 const DURS=[10000,15000,12000,12000];
 
+function fetchWithTimeout(url,ms){
+  const timeout=ms||15000;
+  try{
+    const ctrl=new AbortController();
+    const tid=setTimeout(()=>{ try{ctrl.abort();}catch(e){} },timeout);
+    return fetch(url,{cache:'no-store',signal:ctrl.signal}).finally(()=>clearTimeout(tid));
+  }catch(e){
+    return fetch(url,{cache:'no-store'});
+  }
+}
+
 function parseCSV(text){
   const rows=[];
   let row=[];

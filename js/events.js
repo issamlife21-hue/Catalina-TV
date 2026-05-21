@@ -58,8 +58,11 @@ function renderEvents(){
 // ---------- Live Google Sheet sync (Events tab) ----------
 const EVT_SHEET_REFRESH_MS=10*60*1000;
 const EVT_SHEET_CACHE_KEY='catalina-events-sheet-cache-v1';
+const EVT_FAIL_DELAYS=[30000,60000,120000];
 let _liveEvents=null;
 let _evtSyncStarted=false;
+let _evtFailCount=0;
+let _evtFailTimer=null;
 
 function parseEventsCSV(text){
   const rows=parseCSV(text);
@@ -121,15 +124,21 @@ async function fetchEventsFromSheet(){
   if(typeof EVENTS_SHEET_GID==='undefined'||!EVENTS_SHEET_GID) return;
   const url=`https://docs.google.com/spreadsheets/d/${EVENTS_SHEET_ID}/export?format=csv&gid=${EVENTS_SHEET_GID}`;
   try{
-    const res=await fetch(url,{cache:'no-store'});
+    const res=await fetchWithTimeout(url,15000);
     if(!res.ok) throw new Error('http '+res.status);
     const text=await res.text();
     const parsed=parseEventsCSV(text);
     _liveEvents=parsed;
     try{localStorage.setItem(EVT_SHEET_CACHE_KEY,JSON.stringify(parsed));}catch(e){}
-    renderEvents();
+    try{ renderEvents(); }catch(e){ console.warn('[events] render error:',e); }
+    _evtFailCount=0;
+    if(_evtFailTimer){ clearTimeout(_evtFailTimer); _evtFailTimer=null; }
   }catch(err){
     console.warn('[events] live sheet fetch failed; using cache/fallback:',err);
+    const delay=EVT_FAIL_DELAYS[Math.min(_evtFailCount,EVT_FAIL_DELAYS.length-1)];
+    _evtFailCount++;
+    if(_evtFailTimer) clearTimeout(_evtFailTimer);
+    _evtFailTimer=setTimeout(fetchEventsFromSheet,delay);
   }
 }
 
