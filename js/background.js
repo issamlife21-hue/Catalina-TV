@@ -3,7 +3,7 @@ const bgSlides=[];
 let bgCurLane=0;
 let bgEl=null;
 
-const BG_SHEET_REFRESH_MS=5*60*1000;
+const BG_SHEET_REFRESH_MS=10*60*1000;
 const BG_SHEET_CACHE_KEY='catalina-backgrounds-sheet-cache-v1';
 let _livePhotos=null;
 let _bgSyncStarted=false;

@@ -355,7 +355,8 @@ function resetEventsToDefault(){
 }
 
 function initEventEditor(){
-  document.getElementById('edit-events-btn').addEventListener('click',e=>{
+  const openBtn=document.getElementById('edit-events-btn');
+  if(openBtn) openBtn.addEventListener('click',e=>{
     e.stopPropagation();
     document.getElementById('settings-menu').classList.remove('open');
     document.getElementById('settings-btn').setAttribute('aria-expanded','false');
@@ -374,7 +375,7 @@ function initEventEditor(){
 }
 
 // ---------- Live Google Sheet sync (Events tab) ----------
-const EVT_SHEET_REFRESH_MS=5*60*1000;
+const EVT_SHEET_REFRESH_MS=10*60*1000;
 const EVT_SHEET_CACHE_KEY='catalina-events-sheet-cache-v1';
 let _liveEvents=null;
 let _evtSyncStarted=false;

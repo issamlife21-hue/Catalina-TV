@@ -90,7 +90,7 @@ function formatFloor(entry){
 
 // ---------- Live Google Sheet sync ----------
 const SHEET_CSV_URL='https://docs.google.com/spreadsheets/d/17Uze4Qz_0cXsnj4KS4cFmabK67F_jGG0PR_vtnegrK4/export?format=csv&gid=0';
-const SHEET_REFRESH_MS=5*60*1000;
+const SHEET_REFRESH_MS=10*60*1000;
 const SHEET_CACHE_KEY='catalina-directory-sheet-cache-v1';
 const BUILDING_HEADER_RE=/^\s*(\d{3})\s+GOLDEN\s+SHORE\s*$/i;
 const VACANT_RE=/^\s*VACANT\s+OFFICES/i;
@@ -416,7 +416,8 @@ function resetDirectoryToDefault(){
 }
 
 function initDirectoryEditor(){
-  document.getElementById('edit-directory-btn').addEventListener('click',e=>{
+  const openBtn=document.getElementById('edit-directory-btn');
+  if(openBtn) openBtn.addEventListener('click',e=>{
     e.stopPropagation();
     document.getElementById('settings-menu').classList.remove('open');
     document.getElementById('settings-btn').setAttribute('aria-expanded','false');
