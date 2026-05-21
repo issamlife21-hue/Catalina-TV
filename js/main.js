@@ -45,6 +45,33 @@ goMode(0);
   }catch(e){}
 })();
 
+// ---------- TV keep-alive (LG OLED static-screen detection) ----------
+try{
+  if(typeof ENABLE_TV_KEEPALIVE_MOTION!=='undefined' && ENABLE_TV_KEEPALIVE_MOTION){
+    document.body.classList.add('tv-keepalive');
+  }
+}catch(e){}
+
+// Best-effort screen Wake Lock. Fail silently if unsupported.
+let _wakeLock=null;
+function _tryWakeLock(){
+  try{
+    if(navigator && navigator.wakeLock && typeof navigator.wakeLock.request==='function'){
+      const p=navigator.wakeLock.request('screen');
+      if(p && typeof p.then==='function'){
+        p.then(function(lock){
+          _wakeLock=lock;
+          try{ lock.addEventListener('release',function(){ _wakeLock=null; }); }catch(e){}
+        }).catch(function(){ /* silent */ });
+      }
+    }
+  }catch(e){ /* silent */ }
+}
+_tryWakeLock();
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible' && !_wakeLock) _tryWakeLock();
+});
+
 // ---------- 24/7 lifecycle hardening ----------
 const PAGE_LOADED_AT=Date.now();
 

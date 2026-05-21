@@ -95,6 +95,11 @@ body.cursor-active{cursor:default}
 #vig{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;z-index:1;background:var(--vig);transition:opacity 0.8s var(--ease),background 0.6s var(--ease)}
 #vig.photo-mode{opacity:0}
 
+/* TV keep-alive: subtle continuous full-screen motion to avoid LG OLED static-screen detection. */
+#tv-keepalive{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;z-index:30;pointer-events:none;display:none;background:linear-gradient(135deg,rgba(255,255,255,0.022) 0%,transparent 28%,transparent 72%,rgba(255,255,255,0.022) 100%);background-size:220% 220%}
+body.tv-keepalive #tv-keepalive{display:block;animation:tv-shimmer 26s linear infinite}
+@keyframes tv-shimmer{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
+
 /* ── HUD BARS ── */
 #hud{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;z-index:20;display:flex;flex-direction:column;pointer-events:none}
 #hud-top{display:flex;justify-content:space-between;align-items:center;padding:14px 32px}
@@ -191,11 +196,13 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 .ws-v{font-family:var(--font-display);font-weight:400;font-size:22px;color:var(--ink);line-height:1.05}
 .ws-u{font-family:var(--font-display);font-weight:300;font-size:13px;color:var(--ink-dim);letter-spacing:0.08em;margin-left:2px}
 
-#wx-fc{display:flex;flex-direction:column;gap:12px}
+#wx-fc{display:flex;flex-direction:column}
 .fc{
   padding:10px 16px;
+  margin-bottom:12px;
   display:flex;flex-direction:row;align-items:center;gap:16px;
 }
+.fc:last-child{margin-bottom:0}
 .fc-n{font-family:var(--font-display);font-weight:500;font-size:14px;letter-spacing:0.28em;color:var(--gold);text-transform:uppercase;flex:0 0 50px}
 .fc-icon{flex-shrink:0}
 .fc-cond{font-family:var(--font-display);font-weight:400;font-size:13px;letter-spacing:0.08em;color:var(--ink-dim);text-transform:uppercase;flex:1}
