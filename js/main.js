@@ -26,6 +26,25 @@ loadWeather();
 
 goMode(0);
 
+// ---------- TV debug overlay (?debug=1) ----------
+(function initTvDebug(){
+  try{
+    if(!/[?&]debug=1\b/.test(location.search||'')) return;
+    const el=document.getElementById('tv-debug');
+    if(!el) return;
+    function paint(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      const h=window.innerHeight||document.documentElement.clientHeight||0;
+      const dpr=window.devicePixelRatio||1;
+      const ua=(navigator.userAgent||'').slice(0,140);
+      el.textContent='viewport '+w+'x'+h+' · dpr '+dpr+' · '+ua;
+    }
+    el.style.display='block';
+    paint();
+    window.addEventListener('resize',paint);
+  }catch(e){}
+})();
+
 // ---------- 24/7 lifecycle hardening ----------
 const PAGE_LOADED_AT=Date.now();
 
