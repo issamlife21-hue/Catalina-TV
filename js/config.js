@@ -39,3 +39,27 @@ const WX_SHORT={0:'Clear',1:'Mostly Clear',2:'Pt. Cloudy',3:'Overcast',45:'Fog',
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MODES=['pw','pdir','pevt','pphoto'];
 const DURS=[10000,15000,12000,12000];
+
+function parseCSV(text){
+  const rows=[];
+  let row=[];
+  let field='';
+  let inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQuotes){
+      if(c==='"'){
+        if(text[i+1]==='"'){ field+='"'; i++; }
+        else inQuotes=false;
+      } else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+      else if(c==='\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}

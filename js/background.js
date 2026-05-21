@@ -8,32 +8,8 @@ const BG_SHEET_CACHE_KEY='catalina-backgrounds-sheet-cache-v1';
 let _livePhotos=null;
 let _bgSyncStarted=false;
 
-function bgParseCSV(text){
-  const rows=[];
-  let row=[];
-  let field='';
-  let inQuotes=false;
-  for(let i=0;i<text.length;i++){
-    const c=text[i];
-    if(inQuotes){
-      if(c==='"'){
-        if(text[i+1]==='"'){ field+='"'; i++; }
-        else inQuotes=false;
-      } else field+=c;
-    } else {
-      if(c==='"') inQuotes=true;
-      else if(c===','){ row.push(field); field=''; }
-      else if(c==='\n'){ row.push(field); field=''; rows.push(row); row=[]; }
-      else if(c==='\r'){ /* skip */ }
-      else field+=c;
-    }
-  }
-  if(field.length||row.length){ row.push(field); rows.push(row); }
-  return rows;
-}
-
 function parseBackgroundsCSV(text){
-  const rows=bgParseCSV(text);
+  const rows=parseCSV(text);
   if(rows.length<2) return [];
   const header=rows[0].map(c=>(c||'').trim().toLowerCase());
   const urlIdx=header.indexOf('url');

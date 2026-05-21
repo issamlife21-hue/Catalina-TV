@@ -56,24 +56,6 @@ function applyEventsVisibility(state){
   }
 }
 
-function applyFreqFilter(freq,enabled){
-  const filters=loadFreqFilters();
-  filters[freq]=enabled;
-  saveFreqFilters(filters);
-  refreshFreqChips();
-  if(typeof renderEvents==='function') renderEvents();
-  if(typeof curMode!=='undefined'&&curMode===2&&typeof shouldSkipEventsPanel==='function'&&shouldSkipEventsPanel()&&typeof goMode==='function'){
-    goMode(getNextMode(2));
-  }
-}
-
-function refreshFreqChips(){
-  const filters=loadFreqFilters();
-  document.querySelectorAll('[data-freq]').forEach(chip=>{
-    chip.classList.toggle('active',filters[chip.dataset.freq]!==false);
-  });
-}
-
 function _updateFullscreenLabel(){
   const lab=document.getElementById('fullscreen-label');
   if(!lab) return;
@@ -100,7 +82,6 @@ function initSettings(){
   applyEventsVisibility(read('catalina-events-enabled')==='false'?'hide':'show');
   applyDaylight(read('catalina-daylight')==='on'?'on':'off');
   applyPropertyPos(read('catalina-property-pos')||'center');
-  refreshFreqChips();
   _updateFullscreenLabel();
 
   btn.addEventListener('click',e=>{
@@ -139,14 +120,6 @@ function initSettings(){
     chip.addEventListener('click',e=>{
       e.stopPropagation();
       applyPropertyPos(chip.dataset.propPos);
-    });
-  });
-
-  document.querySelectorAll('[data-freq]').forEach(chip=>{
-    chip.addEventListener('click',e=>{
-      e.stopPropagation();
-      const filters=loadFreqFilters();
-      applyFreqFilter(chip.dataset.freq,filters[chip.dataset.freq]===false);
     });
   });
 

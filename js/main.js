@@ -14,11 +14,7 @@ initSettings();
 applyInfo();
 
 renderEvents();
-initEventEditor();
-
 renderDirectory();
-initDirectoryEditor();
-
 initInfoEditor();
 
 tick();
