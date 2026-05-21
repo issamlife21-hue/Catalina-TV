@@ -158,11 +158,6 @@ function renderDirectory(){
     const card=document.createElement('div');
     card.className='db';
 
-    const wm=document.createElement('div');
-    wm.className='db-watermark';
-    wm.textContent=building.num;
-    card.appendChild(wm);
-
     const head=document.createElement('div');
     head.className='db-head';
     const num=document.createElement('div');

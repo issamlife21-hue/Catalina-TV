@@ -125,9 +125,9 @@ body.og #logo-img{filter:invert(1) brightness(1.05)}
 #logo-sub{font-family:var(--font-display);font-weight:300;font-size:13px;letter-spacing:0.42em;color:var(--gold);text-transform:uppercase}
 
 /* Clock pill */
-#clock-wrap{padding:10px 18px;text-align:right}
-#clk-time{font-family:var(--font-display);font-weight:300;font-size:62px;color:var(--ink);line-height:1;letter-spacing:0.03em}
-#clk-date{font-family:var(--font-display);font-weight:300;font-size:14px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:4px}
+#clock-wrap{padding:8px 14px;text-align:right}
+#clk-time{font-family:var(--font-display);font-weight:300;font-size:56px;color:var(--ink);line-height:1;letter-spacing:0.03em}
+#clk-date{font-family:var(--font-display);font-weight:300;font-size:13px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:3px}
 
 /* Tabs pill */
 #tabs-wrap{display:flex;pointer-events:all;overflow:hidden}
@@ -193,8 +193,7 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 .ws-v{font-family:var(--font-display);font-weight:400;font-size:22px;color:var(--ink);line-height:1.05}
 .ws-u{font-family:var(--font-display);font-weight:300;font-size:13px;color:var(--ink-dim);letter-spacing:0.08em;margin-left:2px}
 
-#wx-fc-label{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:0.36em;color:var(--gold);text-transform:uppercase;padding:0 4px;margin-bottom:2px}
-#wx-fc{display:flex;flex-direction:column;gap:8px}
+#wx-fc{display:flex;flex-direction:column;gap:12px}
 .fc{
   padding:10px 16px;
   display:flex;flex-direction:row;align-items:center;gap:16px;
@@ -210,20 +209,19 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 
 /* ════ DIRECTORY ════ */
 #pdir{flex-direction:column;align-items:center;justify-content:center}
-#dir-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:100%;max-width:1700px;margin:0 auto}
+#dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;width:100%;max-width:1500px;margin:0 auto}
 .db{
   border-left:3px solid var(--gold-dim);
-  padding:10px 14px;
-  position:relative;overflow:hidden;
+  padding:14px 22px;
+  position:relative;
 }
-.db-watermark{position:absolute;right:10px;bottom:4px;font-family:var(--font-display);font-size:110px;font-weight:600;color:rgba(200,164,86,0.05);line-height:1;pointer-events:none;user-select:none}
 .db-head{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(200,164,86,0.12)}
-.db-num{font-family:var(--font-display);font-size:48px;font-weight:400;color:var(--gold);line-height:1}
-.db-street{font-family:var(--font-display);font-weight:300;font-size:15px;letter-spacing:0.28em;color:var(--ink-faint);text-transform:uppercase}
-.dt{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--sep)}
+.db-num{font-family:var(--font-display);font-size:44px;font-weight:400;color:var(--gold);line-height:1}
+.db-street{font-family:var(--font-display);font-weight:300;font-size:14px;letter-spacing:0.3em;color:var(--ink-faint);text-transform:uppercase}
+.dt{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:7px 0;border-bottom:1px solid var(--sep)}
 .dt:last-child{border-bottom:none}
-.dt-n{font-family:var(--font-display);font-size:24px;font-weight:400;letter-spacing:0.04em;color:var(--ink)}
-.dt-f{font-family:var(--font-display);font-size:19px;font-weight:500;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.dt-n{font-family:var(--font-display);font-size:21px;font-weight:400;letter-spacing:0.04em;color:var(--ink);line-height:1.25;min-width:0;flex:1 1 auto}
+.dt-f{font-family:var(--font-display);font-size:16px;font-weight:500;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;white-space:nowrap;flex:0 0 auto}
 #dir-foot{
   margin-top:14px;
   padding:11px 26px;
@@ -650,7 +648,6 @@ body.daylight .tab,
 body.daylight .sec-pill{font-weight:500}
 body.daylight #wx-unit-big,
 body.daylight #wx-loc-label,
-body.daylight #wx-fc-label,
 body.daylight #dir-foot,
 body.daylight #evt-foot,
 body.daylight #photo-sub{font-weight:400}
