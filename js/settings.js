@@ -36,6 +36,16 @@ function applyDaylight(state){
   try{localStorage.setItem('catalina-daylight',on?'on':'off');}catch(e){}
 }
 
+function applyPropertyPos(pos){
+  if(pos!=='top'&&pos!=='bottom') pos='center';
+  document.body.classList.remove('prop-pos-top','prop-pos-center','prop-pos-bottom');
+  document.body.classList.add('prop-pos-'+pos);
+  document.querySelectorAll('[data-prop-pos]').forEach(c=>{
+    c.classList.toggle('active',c.dataset.propPos===pos);
+  });
+  try{localStorage.setItem('catalina-property-pos',pos);}catch(e){}
+}
+
 function applyEventsVisibility(state){
   const visible=state==='show';
   document.body.classList.toggle('events-hidden',!visible);
@@ -89,6 +99,7 @@ function initSettings(){
   applyWeatherIcons(read('catalina-icons')==='hide'?'hide':'show');
   applyEventsVisibility(read('catalina-events-enabled')==='false'?'hide':'show');
   applyDaylight(read('catalina-daylight')==='on'?'on':'off');
+  applyPropertyPos(read('catalina-property-pos')||'center');
   refreshFreqChips();
   _updateFullscreenLabel();
 
@@ -121,6 +132,13 @@ function initSettings(){
     chip.addEventListener('click',e=>{
       e.stopPropagation();
       applyTheme(chip.dataset.theme);
+    });
+  });
+
+  document.querySelectorAll('[data-prop-pos]').forEach(chip=>{
+    chip.addEventListener('click',e=>{
+      e.stopPropagation();
+      applyPropertyPos(chip.dataset.propPos);
     });
   });
 

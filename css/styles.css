@@ -181,7 +181,7 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 .ws-v{font-family:var(--font-display);font-weight:400;font-size:22px;color:var(--ink);line-height:1.05}
 .ws-u{font-family:var(--font-display);font-weight:300;font-size:13px;color:var(--ink-dim);letter-spacing:0.08em;margin-left:2px}
 
-#wx-fc-label{font-family:var(--font-display);font-weight:500;font-size:13px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;padding:0 4px;margin-bottom:2px}
+#wx-fc-label{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:0.36em;color:var(--gold);text-transform:uppercase;padding:0 4px;margin-bottom:2px}
 #wx-fc{display:flex;flex-direction:column;gap:8px}
 .fc{
   padding:10px 16px;
@@ -217,6 +217,7 @@ body.light .ws{background:rgba(0,0,0,0.04)}
   padding:11px 26px;
   font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:0.28em;color:var(--gold);text-transform:uppercase;
 }
+#dir-foot-phone{font-weight:700;letter-spacing:0.22em;color:#e7c878}
 
 /* ════ EVENTS ════ */
 #pevt{flex-direction:column;align-items:center;justify-content:center}
@@ -225,14 +226,13 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 #evt-grid[data-count="2"]{grid-template-columns:repeat(2,minmax(0,calc((100% - 24px) / 3)));justify-content:center}
 .ec{
   border-top:1px solid var(--gold-dim);
-  padding:11px 14px;
-  display:flex;flex-direction:column;gap:5px;
+  padding:16px 16px 14px;
+  display:flex;flex-direction:column;gap:10px;
 }
-.ec-freq{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;padding-bottom:11px;border-bottom:1px solid rgba(200,164,86,0.14)}
-.ec-date{font-family:var(--font-display);font-weight:300;font-size:19px;letter-spacing:0.1em;color:var(--gold)}
-.ec-name{font-family:var(--font-display);font-size:28px;font-weight:400;color:var(--ink);line-height:1.25}
-.ec-desc{font-family:var(--font-body);font-size:17px;font-weight:300;color:var(--ink-dim);line-height:1.55}
-.ec-loc{font-family:var(--font-display);font-weight:500;font-size:17px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;padding-top:10px;border-top:1px solid rgba(200,164,86,0.18)}
+.ec-name{font-family:var(--font-display);font-size:30px;font-weight:400;color:var(--ink);line-height:1.2;letter-spacing:0.01em}
+.ec-meta{font-family:var(--font-display);font-weight:500;font-size:14px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase}
+.ec-desc{font-family:var(--font-body);font-size:15px;font-weight:300;color:var(--ink-dim);line-height:1.5}
+.ec-loc{font-family:var(--font-display);font-weight:500;font-size:13px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;opacity:0.85;margin-top:auto;padding-top:8px}
 #evt-foot{
   margin-top:14px;
   padding:10px 24px;
@@ -248,7 +248,10 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 }
 
 /* ════ PHOTO PANEL ════ */
-#pphoto{flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:80px}
+#pphoto{flex-direction:column;align-items:center;justify-content:center}
+body.prop-pos-top #pphoto{justify-content:flex-start;padding-top:100px}
+body.prop-pos-center #pphoto{justify-content:center}
+body.prop-pos-bottom #pphoto{justify-content:flex-end;padding-bottom:80px}
 #photo-lower{
   text-align:center;opacity:0;transform:translateY(8px);
   transition:opacity 1.2s 0.5s ease,transform 1.2s 0.5s ease;
@@ -744,8 +747,7 @@ body.daylight .fc-h,
 body.daylight .db-street,
 body.daylight .dt-n,
 body.daylight .dt-f,
-body.daylight .ec-freq,
-body.daylight .ec-date,
+body.daylight .ec-meta,
 body.daylight .ec-desc,
 body.daylight .ec-loc,
 body.daylight #greeting,

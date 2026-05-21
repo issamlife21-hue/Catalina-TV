@@ -167,14 +167,14 @@ function renderEvents(){
   events.forEach(ev=>{
     const card=document.createElement('div');
     card.className='ec';
-    const freqText=source==='sheet' ? (ev.category||'') : formatEventFreq(ev);
-    const dateText=source==='sheet' ? [ev.date,ev.time].filter(Boolean).join(' · ') : formatEventDate(ev);
-    const freq=document.createElement('div');freq.className='ec-freq';freq.textContent=freqText;
-    const date=document.createElement('div');date.className='ec-date';date.textContent=dateText;
+    const metaText=source==='sheet'
+      ? [ev.frequency,ev.date,ev.time].filter(Boolean).join(' · ')
+      : [formatEventFreq(ev),formatEventDate(ev)].filter(Boolean).join(' · ');
     const name=document.createElement('div');name.className='ec-name';name.textContent=ev.name;
+    const meta=document.createElement('div');meta.className='ec-meta';meta.textContent=metaText;
     const desc=document.createElement('div');desc.className='ec-desc';desc.textContent=ev.desc;
     const loc=document.createElement('div');loc.className='ec-loc';loc.textContent=ev.loc;
-    card.append(freq,date,name,desc,loc);
+    card.append(name,meta,desc,loc);
     grid.appendChild(card);
   });
 }
@@ -409,13 +409,14 @@ function parseEventsCSV(text){
   if(rows.length<2) return [];
   const header=rows[0].map(c=>(c||'').trim().toLowerCase());
   const idx={
-    category: header.indexOf('category'),
-    date:     header.indexOf('date'),
-    time:     header.indexOf('time'),
-    title:    header.indexOf('title'),
-    desc:     header.indexOf('description'),
-    loc:      header.indexOf('location'),
-    active:   header.indexOf('active'),
+    title:     header.indexOf('title'),
+    frequency: header.indexOf('frequency'),
+    date:      header.indexOf('date'),
+    time:      header.indexOf('time'),
+    loc:       header.indexOf('location'),
+    desc:      header.indexOf('description'),
+    active:    header.indexOf('active'),
+    priority:  header.indexOf('priority'),
   };
   if(idx.title<0) return [];
   const out=[];
@@ -428,12 +429,13 @@ function parseEventsCSV(text){
       if(v!=='TRUE'&&v!=='YES'&&v!=='1'&&v!=='ON') continue;
     }
     out.push({
-      category: idx.category>=0 ? (row[idx.category]||'').trim() : '',
-      date:     idx.date>=0     ? (row[idx.date]||'').trim()     : '',
-      time:     idx.time>=0     ? (row[idx.time]||'').trim()     : '',
-      name:     title,
-      desc:     idx.desc>=0     ? (row[idx.desc]||'').trim()     : '',
-      loc:      idx.loc>=0      ? (row[idx.loc]||'').trim()      : '',
+      name:      title,
+      frequency: idx.frequency>=0 ? (row[idx.frequency]||'').trim() : '',
+      date:      idx.date>=0      ? (row[idx.date]||'').trim()      : '',
+      time:      idx.time>=0      ? (row[idx.time]||'').trim()      : '',
+      loc:       idx.loc>=0       ? (row[idx.loc]||'').trim()       : '',
+      desc:      idx.desc>=0      ? (row[idx.desc]||'').trim()      : '',
+      priority:  idx.priority>=0  ? (row[idx.priority]||'').trim()  : '',
     });
     if(out.length>=3) break;
   }
