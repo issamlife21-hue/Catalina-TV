@@ -27,6 +27,11 @@ PHOTOS.push(
   'https://waterfrontcatalinalanding.com/wp-content/uploads/2023/05/BuildingPhoto-42-web.jpeg'
 );
 
+// Same Google Sheet as the tenant directory; new "Backgrounds" tab.
+// Paste the Backgrounds tab's gid below to enable live sync (leave blank to use PHOTOS above).
+const BG_SHEET_ID='17Uze4Qz_0cXsnj4KS4cFmabK67F_jGG0PR_vtnegrK4';
+const BG_SHEET_GID='589321751';
+
 const WX_COND={0:'Clear',1:'Mostly Clear',2:'Partly Cloudy',3:'Overcast',45:'Fog',48:'Freezing Fog',51:'Light Drizzle',53:'Drizzle',55:'Heavy Drizzle',61:'Light Rain',63:'Moderate Rain',65:'Heavy Rain',71:'Light Snow',73:'Moderate Snow',75:'Heavy Snow',80:'Showers',81:'Rain Showers',82:'Heavy Showers',95:'Thunderstorm',96:'Thunderstorm',99:'Severe Storm'};
 const WX_SHORT={0:'Clear',1:'Mostly Clear',2:'Pt. Cloudy',3:'Overcast',45:'Fog',48:'Fog',51:'Drizzle',53:'Drizzle',55:'Rain',61:'Rain',63:'Rain',65:'Rain',71:'Snow',73:'Snow',75:'Snow',80:'Showers',81:'Showers',82:'Showers',95:'Storm',96:'Storm',99:'Storm'};
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
