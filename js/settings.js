@@ -46,6 +46,16 @@ function applyPropertyPos(pos){
   try{localStorage.setItem('catalina-property-pos',pos);}catch(e){}
 }
 
+function applyPanelSolidness(val){
+  let v=parseFloat(val);
+  if(!isFinite(v)) v=1;
+  if(v<0.4) v=0.4; else if(v>1.6) v=1.6;
+  document.documentElement.style.setProperty('--panel-alpha-mult',String(v));
+  const slider=document.getElementById('panel-solidness');
+  if(slider && parseFloat(slider.value)!==v) slider.value=String(v);
+  try{localStorage.setItem('catalina-panel-solidness',String(v));}catch(e){}
+}
+
 function applyEventsVisibility(state){
   const visible=state==='show';
   document.body.classList.toggle('events-hidden',!visible);
@@ -82,6 +92,7 @@ function initSettings(){
   applyEventsVisibility(read('catalina-events-enabled')==='false'?'hide':'show');
   applyDaylight(read('catalina-daylight')==='on'?'on':'off');
   applyPropertyPos(read('catalina-property-pos')||'center');
+  applyPanelSolidness(read('catalina-panel-solidness')||'1');
   _updateFullscreenLabel();
 
   btn.addEventListener('click',e=>{
@@ -122,6 +133,14 @@ function initSettings(){
       applyPropertyPos(chip.dataset.propPos);
     });
   });
+
+  const solidSlider=document.getElementById('panel-solidness');
+  if(solidSlider){
+    const handler=e=>{ e.stopPropagation(); applyPanelSolidness(e.target.value); };
+    solidSlider.addEventListener('input',handler);
+    solidSlider.addEventListener('change',handler);
+    solidSlider.addEventListener('click',e=>e.stopPropagation());
+  }
 
   const fsBtn=document.getElementById('fullscreen-btn');
   if(fsBtn) fsBtn.addEventListener('click',e=>{e.stopPropagation();toggleFullscreen();});

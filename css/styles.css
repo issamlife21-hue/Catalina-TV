@@ -5,9 +5,10 @@
   --ink:#f5f0e8;
   --ink-dim:rgba(245,240,232,0.65);
   --ink-faint:rgba(245,240,232,0.38);
-  --g:rgba(6,8,7,0.68);
+  --panel-alpha-mult:1;
+  --g:rgba(6,8,7,calc(0.68 * var(--panel-alpha-mult)));
   --gb:rgba(200,164,86,0.28);
-  --glass:linear-gradient(160deg,rgba(28,32,28,0.84) 0%,rgba(7,10,8,0.8) 55%,rgba(12,16,12,0.75) 100%);
+  --glass:linear-gradient(160deg,rgba(28,32,28,calc(0.84 * var(--panel-alpha-mult))) 0%,rgba(7,10,8,calc(0.8 * var(--panel-alpha-mult))) 55%,rgba(12,16,12,calc(0.75 * var(--panel-alpha-mult))) 100%);
   --surface:linear-gradient(160deg,rgba(18,22,20,0.98) 0%,rgba(8,12,10,0.97) 55%,rgba(12,16,14,0.96) 100%);
   --surface-inset:rgba(0,0,0,0.42);
   --surface-input:rgba(0,0,0,0.32);
@@ -27,9 +28,9 @@ body.light{
   --ink:#1c1814;
   --ink-dim:rgba(28,24,20,0.72);
   --ink-faint:rgba(28,24,20,0.45);
-  --g:rgba(248,244,234,0.72);
+  --g:rgba(248,244,234,calc(0.72 * var(--panel-alpha-mult)));
   --gb:rgba(138,108,42,0.32);
-  --glass:linear-gradient(160deg,rgba(252,248,240,0.88) 0%,rgba(238,228,212,0.82) 55%,rgba(244,234,218,0.78) 100%);
+  --glass:linear-gradient(160deg,rgba(252,248,240,calc(0.88 * var(--panel-alpha-mult))) 0%,rgba(238,228,212,calc(0.82 * var(--panel-alpha-mult))) 55%,rgba(244,234,218,calc(0.78 * var(--panel-alpha-mult))) 100%);
   --surface:linear-gradient(160deg,rgba(255,253,247,0.98) 0%,rgba(248,243,231,0.97) 55%,rgba(252,247,236,0.96) 100%);
   --surface-inset:rgba(0,0,0,0.07);
   --surface-input:rgba(255,255,255,0.7);
@@ -43,9 +44,9 @@ body.navy{
   --ink:#e8eef5;
   --ink-dim:rgba(232,238,245,0.72);
   --ink-faint:rgba(232,238,245,0.45);
-  --g:rgba(8,16,32,0.7);
+  --g:rgba(8,16,32,calc(0.7 * var(--panel-alpha-mult)));
   --gb:rgba(212,168,71,0.34);
-  --glass:linear-gradient(160deg,rgba(22,36,64,0.86) 0%,rgba(10,20,40,0.82) 55%,rgba(16,28,52,0.78) 100%);
+  --glass:linear-gradient(160deg,rgba(22,36,64,calc(0.86 * var(--panel-alpha-mult))) 0%,rgba(10,20,40,calc(0.82 * var(--panel-alpha-mult))) 55%,rgba(16,28,52,calc(0.78 * var(--panel-alpha-mult))) 100%);
   --surface:linear-gradient(160deg,rgba(16,28,52,0.98) 0%,rgba(8,16,32,0.97) 55%,rgba(12,22,42,0.96) 100%);
   --surface-inset:rgba(0,0,0,0.4);
   --surface-input:rgba(0,0,0,0.28);
@@ -59,9 +60,9 @@ body.og{
   --ink:#f5f0e8;
   --ink-dim:rgba(245,240,232,0.72);
   --ink-faint:rgba(245,240,232,0.45);
-  --g:rgba(10,18,32,0.72);
+  --g:rgba(10,18,32,calc(0.72 * var(--panel-alpha-mult)));
   --gb:rgba(240,144,48,0.32);
-  --glass:linear-gradient(160deg,rgba(26,41,64,0.86) 0%,rgba(15,28,52,0.82) 55%,rgba(20,34,58,0.78) 100%);
+  --glass:linear-gradient(160deg,rgba(26,41,64,calc(0.86 * var(--panel-alpha-mult))) 0%,rgba(15,28,52,calc(0.82 * var(--panel-alpha-mult))) 55%,rgba(20,34,58,calc(0.78 * var(--panel-alpha-mult))) 100%);
   --surface:linear-gradient(160deg,rgba(18,32,56,0.98) 0%,rgba(10,20,40,0.97) 55%,rgba(14,26,48,0.96) 100%);
   --surface-inset:rgba(0,0,0,0.42);
   --surface-input:rgba(0,0,0,0.3);
@@ -102,16 +103,13 @@ body.cursor-active{cursor:default}
 /* ── SHARED GLASS PILL ── */
 #logo,#clock-wrap,#tabs-wrap,#wx-temp-block,.ws,.fc,.db,.ec,#settings-menu{
   background:var(--glass);
-  border:1px solid rgba(200,164,86,0.26);
-  border-top:1px solid rgba(200,164,86,0.42);
-  box-shadow:0 1px 0 rgba(255,255,255,0.05) inset,0 6px 24px rgba(0,0,0,0.3);
+  box-shadow:0 6px 24px rgba(0,0,0,0.3);
   border-radius:var(--radius);
 }
 
 /* ── SHARED COMPACT PILL ── */
 .sec-pill,#dir-foot,#evt-foot,#photo-pill{
   background:var(--g);
-  border:1px solid var(--gb);
   border-radius:var(--radius);
 }
 
@@ -182,7 +180,6 @@ body.cursor-active{cursor:default}
 #wx-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:16px;width:100%}
 .ws{
   border:none;
-  border-left:2px solid var(--gold-dim);
   padding:6px 10px;
   display:flex;flex-direction:column;gap:1px;
   background:rgba(255,255,255,0.04);
@@ -212,7 +209,6 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 #pdir{flex-direction:column;align-items:center;justify-content:center}
 #dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:36px;width:100%;max-width:1280px;margin:0 auto}
 .db{
-  border-left:3px solid var(--gold-dim);
   padding:12px 20px;
   position:relative;
 }
@@ -234,7 +230,6 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 #evt-grid[data-count="1"]{grid-template-columns:minmax(0,calc((100% - 24px) / 3));justify-content:center}
 #evt-grid[data-count="2"]{grid-template-columns:repeat(2,minmax(0,calc((100% - 24px) / 3)));justify-content:center}
 .ec{
-  border-top:1px solid var(--gold-dim);
   padding:16px 16px 14px;
   display:flex;flex-direction:column;gap:10px;
 }
@@ -368,6 +363,35 @@ body.light .ios-switch{background:rgba(120,120,128,0.18)}
 body.light .theme-opt{background:rgba(255,255,255,0.4)}
 .theme-opt:hover{color:var(--ink);border-color:rgba(200,164,86,0.32)}
 .theme-opt.active{color:var(--gold);border-color:var(--gold-dim);background:rgba(200,164,86,0.14)}
+
+.slider-row{position:relative;display:flex;align-items:center;width:100%;padding:6px 0}
+.slider-row input[type="range"]{
+  width:100%;
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  height:4px;
+  background:rgba(200,164,86,0.22);
+  border-radius:2px;
+  outline:none;
+  cursor:pointer;
+  margin:0;
+}
+.slider-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:14px;height:14px;background:var(--gold);border-radius:50%;
+  border:none;cursor:pointer;
+}
+.slider-row input[type="range"]::-moz-range-thumb{
+  width:14px;height:14px;background:var(--gold);border-radius:50%;
+  border:none;cursor:pointer;
+}
+.slider-tick{
+  position:absolute;left:50%;top:50%;
+  width:2px;height:10px;
+  background:rgba(200,164,86,0.55);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  border-radius:1px;
+}
 
 .settings-action{
   display:flex;align-items:center;justify-content:space-between;
@@ -591,32 +615,32 @@ body.no-weather-icons #wx-icon,body.no-weather-icons .fc-icon{display:none}
 /* ════ DAYLIGHT MODE — for high ambient light / sunlit lobby ════ */
 body.daylight{
   --vig:rgba(0,0,0,0.55);
-  --glass:linear-gradient(160deg,rgba(20,22,20,0.96) 0%,rgba(6,8,7,0.95) 55%,rgba(10,14,10,0.94) 100%);
-  --g:rgba(6,8,7,0.88);
+  --glass:linear-gradient(160deg,rgba(20,22,20,calc(0.96 * var(--panel-alpha-mult))) 0%,rgba(6,8,7,calc(0.95 * var(--panel-alpha-mult))) 55%,rgba(10,14,10,calc(0.94 * var(--panel-alpha-mult))) 100%);
+  --g:rgba(6,8,7,calc(0.88 * var(--panel-alpha-mult)));
   --gb:rgba(200,164,86,0.42);
   --ink-dim:rgba(245,240,232,0.85);
   --ink-faint:rgba(245,240,232,0.62);
 }
 body.daylight.light{
   --vig:rgba(255,250,240,0.45);
-  --glass:linear-gradient(160deg,rgba(252,248,240,0.97) 0%,rgba(238,228,212,0.95) 55%,rgba(244,234,218,0.94) 100%);
-  --g:rgba(248,244,234,0.92);
+  --glass:linear-gradient(160deg,rgba(252,248,240,calc(0.97 * var(--panel-alpha-mult))) 0%,rgba(238,228,212,calc(0.95 * var(--panel-alpha-mult))) 55%,rgba(244,234,218,calc(0.94 * var(--panel-alpha-mult))) 100%);
+  --g:rgba(248,244,234,calc(0.92 * var(--panel-alpha-mult)));
   --gb:rgba(138,108,42,0.46);
   --ink-dim:rgba(28,24,20,0.88);
   --ink-faint:rgba(28,24,20,0.65);
 }
 body.daylight.navy{
   --vig:rgba(6,14,32,0.55);
-  --glass:linear-gradient(160deg,rgba(14,24,46,0.96) 0%,rgba(6,14,30,0.95) 55%,rgba(10,20,38,0.94) 100%);
-  --g:rgba(8,16,32,0.92);
+  --glass:linear-gradient(160deg,rgba(14,24,46,calc(0.96 * var(--panel-alpha-mult))) 0%,rgba(6,14,30,calc(0.95 * var(--panel-alpha-mult))) 55%,rgba(10,20,38,calc(0.94 * var(--panel-alpha-mult))) 100%);
+  --g:rgba(8,16,32,calc(0.92 * var(--panel-alpha-mult)));
   --gb:rgba(212,168,71,0.5);
   --ink-dim:rgba(232,238,245,0.88);
   --ink-faint:rgba(232,238,245,0.65);
 }
 body.daylight.og{
   --vig:rgba(10,20,40,0.55);
-  --glass:linear-gradient(160deg,rgba(18,32,58,0.96) 0%,rgba(10,20,40,0.95) 55%,rgba(14,26,48,0.94) 100%);
-  --g:rgba(10,18,32,0.92);
+  --glass:linear-gradient(160deg,rgba(18,32,58,calc(0.96 * var(--panel-alpha-mult))) 0%,rgba(10,20,40,calc(0.95 * var(--panel-alpha-mult))) 55%,rgba(14,26,48,calc(0.94 * var(--panel-alpha-mult))) 100%);
+  --g:rgba(10,18,32,calc(0.92 * var(--panel-alpha-mult)));
   --gb:rgba(240,144,48,0.5);
   --ink-dim:rgba(245,240,232,0.88);
   --ink-faint:rgba(245,240,232,0.65);
