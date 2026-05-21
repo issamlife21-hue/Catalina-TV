@@ -116,15 +116,17 @@ body.cursor-active{cursor:default}
 }
 
 /* Logo pill */
-#logo{padding:8px 14px;display:flex;flex-direction:row;align-items:center;gap:12px}
-#logo-mark{display:block;height:36px;width:36px;object-fit:contain;color:var(--gold);flex:0 0 auto}
-#logo-text{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.1}
-#logo-name{font-family:var(--font-display);font-weight:400;font-size:18px;letter-spacing:0.18em;color:var(--ink);text-transform:uppercase}
-#logo-sub{font-family:var(--font-display);font-weight:300;font-size:11px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase}
+#logo{padding:10px 16px;min-height:96px;display:flex;flex-direction:row;align-items:center;gap:14px;box-sizing:border-box}
+#logo-mark-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto}
+#logo-demo-tag{font-family:var(--font-display);font-weight:400;font-size:8px;letter-spacing:0.32em;color:var(--ink-faint);text-transform:uppercase;line-height:1}
+#logo-mark{display:block;height:52px;width:52px;object-fit:contain;color:var(--gold)}
+#logo-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.1}
+#logo-name{font-family:var(--font-display);font-weight:400;font-size:20px;letter-spacing:0.2em;color:var(--ink);text-transform:uppercase}
+#logo-sub{font-family:var(--font-display);font-weight:300;font-size:12px;letter-spacing:0.34em;color:var(--gold);text-transform:uppercase}
 
 /* Clock pill */
-#clock-wrap{padding:8px 14px;text-align:right}
-#clk-time{font-family:var(--font-display);font-weight:300;font-size:56px;color:var(--ink);line-height:1;letter-spacing:0.03em}
+#clock-wrap{padding:10px 16px;min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;box-sizing:border-box}
+#clk-time{font-family:var(--font-display);font-weight:300;font-size:52px;color:var(--ink);line-height:1;letter-spacing:0.03em}
 #clk-date{font-family:var(--font-display);font-weight:300;font-size:13px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:3px}
 
 /* Tabs pill */
@@ -208,7 +210,7 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 
 /* ════ DIRECTORY ════ */
 #pdir{flex-direction:column;align-items:center;justify-content:center}
-#dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;width:100%;max-width:1280px;margin:0 auto}
+#dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:36px;width:100%;max-width:1280px;margin:0 auto}
 .db{
   border-left:3px solid var(--gold-dim);
   padding:12px 20px;
@@ -216,7 +218,7 @@ body.light .ws{background:rgba(0,0,0,0.04)}
 }
 .db-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(200,164,86,0.12)}
 .db-num{font-family:var(--font-display);font-size:42px;font-weight:400;color:var(--gold);line-height:1}
-.dt{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:4px 0;border-bottom:1px solid var(--sep)}
+.dt{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:2px 0;border-bottom:1px solid var(--sep)}
 .dt:last-child{border-bottom:none}
 .dt-n{font-family:var(--font-display);font-size:20px;font-weight:400;letter-spacing:0.04em;color:var(--ink);line-height:1.2;min-width:0;flex:1 1 auto}
 .dt-f{font-family:var(--font-display);font-size:15px;font-weight:500;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;white-space:nowrap;flex:0 0 auto}
