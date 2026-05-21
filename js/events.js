@@ -120,7 +120,7 @@ function getFilteredEvents(){
 
 function shouldSkipEventsPanel(){
   if(!eventsPageEnabled()) return true;
-  return getFilteredEvents().length===0;
+  return getEffectiveEventsForRender().events.length===0;
 }
 
 function formatTime(ev){
@@ -151,9 +151,10 @@ function formatEventDate(ev){
 }
 
 function renderEvents(){
+  startEventsLiveSync();
   const grid=document.getElementById('evt-grid');
   if(!grid) return;
-  const events=getFilteredEvents();
+  const {source,events}=getEffectiveEventsForRender();
   grid.innerHTML='';
   grid.dataset.count=events.length;
   if(events.length===0){
@@ -166,8 +167,10 @@ function renderEvents(){
   events.forEach(ev=>{
     const card=document.createElement('div');
     card.className='ec';
-    const freq=document.createElement('div');freq.className='ec-freq';freq.textContent=formatEventFreq(ev);
-    const date=document.createElement('div');date.className='ec-date';date.textContent=formatEventDate(ev);
+    const freqText=source==='sheet' ? (ev.category||'') : formatEventFreq(ev);
+    const dateText=source==='sheet' ? [ev.date,ev.time].filter(Boolean).join(' · ') : formatEventDate(ev);
+    const freq=document.createElement('div');freq.className='ec-freq';freq.textContent=freqText;
+    const date=document.createElement('div');date.className='ec-date';date.textContent=dateText;
     const name=document.createElement('div');name.className='ec-name';name.textContent=ev.name;
     const desc=document.createElement('div');desc.className='ec-desc';desc.textContent=ev.desc;
     const loc=document.createElement('div');loc.className='ec-loc';loc.textContent=ev.loc;
@@ -368,4 +371,111 @@ function initEventEditor(){
       closeEventEditor();
     }
   });
+}
+
+// ---------- Live Google Sheet sync (Events tab) ----------
+const EVT_SHEET_REFRESH_MS=5*60*1000;
+const EVT_SHEET_CACHE_KEY='catalina-events-sheet-cache-v1';
+let _liveEvents=null;
+let _evtSyncStarted=false;
+
+function evtParseCSV(text){
+  const rows=[];
+  let row=[];
+  let field='';
+  let inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQuotes){
+      if(c==='"'){
+        if(text[i+1]==='"'){ field+='"'; i++; }
+        else inQuotes=false;
+      } else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+      else if(c==='\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+
+function parseEventsCSV(text){
+  const rows=evtParseCSV(text);
+  if(rows.length<2) return [];
+  const header=rows[0].map(c=>(c||'').trim().toLowerCase());
+  const idx={
+    category: header.indexOf('category'),
+    date:     header.indexOf('date'),
+    time:     header.indexOf('time'),
+    title:    header.indexOf('title'),
+    desc:     header.indexOf('description'),
+    loc:      header.indexOf('location'),
+    active:   header.indexOf('active'),
+  };
+  if(idx.title<0) return [];
+  const out=[];
+  for(let i=1;i<rows.length;i++){
+    const row=rows[i];
+    const title=(row[idx.title]||'').trim();
+    if(!title) continue;
+    if(idx.active>=0){
+      const v=(row[idx.active]||'').trim().toUpperCase();
+      if(v!=='TRUE'&&v!=='YES'&&v!=='1'&&v!=='ON') continue;
+    }
+    out.push({
+      category: idx.category>=0 ? (row[idx.category]||'').trim() : '',
+      date:     idx.date>=0     ? (row[idx.date]||'').trim()     : '',
+      time:     idx.time>=0     ? (row[idx.time]||'').trim()     : '',
+      name:     title,
+      desc:     idx.desc>=0     ? (row[idx.desc]||'').trim()     : '',
+      loc:      idx.loc>=0      ? (row[idx.loc]||'').trim()      : '',
+    });
+    if(out.length>=3) break;
+  }
+  return out;
+}
+
+function readCachedSheetEvents(){
+  try{
+    const raw=localStorage.getItem(EVT_SHEET_CACHE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){}
+  return null;
+}
+
+function getEffectiveEventsForRender(){
+  let sheet=_liveEvents;
+  if(sheet===null) sheet=readCachedSheetEvents();
+  if(Array.isArray(sheet)) return {source:'sheet', events:sheet};
+  return {source:'local', events:getFilteredEvents()};
+}
+
+async function fetchEventsFromSheet(){
+  if(typeof EVENTS_SHEET_GID==='undefined'||!EVENTS_SHEET_GID) return;
+  const url=`https://docs.google.com/spreadsheets/d/${EVENTS_SHEET_ID}/export?format=csv&gid=${EVENTS_SHEET_GID}`;
+  try{
+    const res=await fetch(url,{cache:'no-store'});
+    if(!res.ok) throw new Error('http '+res.status);
+    const text=await res.text();
+    const parsed=parseEventsCSV(text);
+    _liveEvents=parsed;
+    try{localStorage.setItem(EVT_SHEET_CACHE_KEY,JSON.stringify(parsed));}catch(e){}
+    renderEvents();
+  }catch(err){
+    console.warn('[events] live sheet fetch failed; using cache/fallback:',err);
+  }
+}
+
+function startEventsLiveSync(){
+  if(_evtSyncStarted) return;
+  _evtSyncStarted=true;
+  fetchEventsFromSheet();
+  setInterval(fetchEventsFromSheet,EVT_SHEET_REFRESH_MS);
 }
