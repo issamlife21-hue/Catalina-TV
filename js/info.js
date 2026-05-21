@@ -1,7 +1,7 @@
 const DEFAULT_INFO={
   logoName:'Catalina Landing',
   logoSub:'310 – 340 Golden Shore · Long Beach, CA',
-  dirFoot:'Leasing Inquiries · NRE Commercial · (424) 477-3816',
+  dirFoot:'Leasing Inquiries · (424) 477-3816',
   evtFoot:'Post an Event · lobby@ticapital.com',
   photoTitle:'The Waterfront at Catalina Landing',
   photoSub:'Long Beach, California'
@@ -25,6 +25,9 @@ function loadInfo(){
         if(parsed.evtFoot&&parsed.evtFoot.includes('TI Capital Management')){
           parsed.evtFoot=parsed.evtFoot.replace(/\s*·\s*TI Capital Management/g,'').trim();
         }
+        if(parsed.dirFoot&&parsed.dirFoot.includes('NRE Commercial')){
+          parsed.dirFoot=parsed.dirFoot.replace(/\s*·\s*NRE Commercial/g,'').trim();
+        }
         delete parsed.demoTag;
         return {...DEFAULT_INFO,...parsed};
       }
@@ -42,10 +45,26 @@ function applyInfo(){
   const set=(id,val)=>{const el=document.getElementById(id);if(el) el.textContent=val;};
   set('logo-name',info.logoName);
   set('logo-sub',info.logoSub);
-  set('dir-foot',info.dirFoot);
+  setDirFoot(info.dirFoot);
   set('evt-foot',info.evtFoot);
   set('photo-title',info.photoTitle);
   set('photo-sub',info.photoSub);
+}
+
+function setDirFoot(val){
+  const el=document.getElementById('dir-foot');
+  if(!el) return;
+  const s=(val||'').toString();
+  const phoneRe=/(\(\d{3}\)\s?\d{3}[-\s]?\d{4}|\d{3}[-.\s]\d{3}[-.\s]\d{4})/;
+  const m=phoneRe.exec(s);
+  el.textContent='';
+  if(!m){ el.textContent=s; return; }
+  el.appendChild(document.createTextNode(s.slice(0,m.index)));
+  const span=document.createElement('span');
+  span.id='dir-foot-phone';
+  span.textContent=m[0];
+  el.appendChild(span);
+  el.appendChild(document.createTextNode(s.slice(m.index+m[0].length)));
 }
 
 function buildInfoEditorForm(){
