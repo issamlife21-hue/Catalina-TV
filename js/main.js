@@ -76,10 +76,10 @@ document.addEventListener('visibilitychange',function(){
 
 // Layer 2: Active-media keepalive — mimics a real media playback so TV firmware
 // (LG OLED burn-in protection etc.) and browser idle heuristics keep the page alive.
-// Video: 64x64 canvas capture at 10 fps with subtle color drift.
-// Audio: silent AudioContext oscillator routed into the same MediaStream and to the audio device.
+// Video: 64x64 canvas capture at 10 fps with subtle color drift (canvas is NOT in DOM).
+// Audio: silent AudioContext oscillator routed only into the MediaStream (never to speakers).
 // MediaSession: marks the page as actively playing media (same signal YouTube uses).
-// No sound, no controls, near-invisible (opacity 0.01 in the corner).
+// Visible footprint: a 4x4 px hidden <video> at the very top-left, opacity 0.01.
 (function _startMediaKeepalive(){
   try{
     if(typeof ENABLE_TV_MEDIA_KEEPALIVE==='undefined' || !ENABLE_TV_MEDIA_KEEPALIVE) return;
@@ -117,7 +117,7 @@ document.addEventListener('visibilitychange',function(){
         const dest=audioCtx.createMediaStreamDestination();
         osc.connect(gain);
         gain.connect(dest);
-        try{ gain.connect(audioCtx.destination); }catch(e){}
+        // Intentionally NOT connecting gain to audioCtx.destination — keeps speakers fully silent.
         osc.start();
         const at=dest.stream.getAudioTracks();
         for(let i=0;i<at.length;i++){ try{ stream.addTrack(at[i]); }catch(e){} }
@@ -143,7 +143,7 @@ document.addEventListener('visibilitychange',function(){
     video.setAttribute('playsinline','');
     video.setAttribute('autoplay','');
     video.setAttribute('aria-hidden','true');
-    video.style.cssText='position:fixed;right:0;bottom:0;width:64px;height:64px;opacity:0.01;pointer-events:none;z-index:0';
+    video.style.cssText='position:fixed;left:0;top:0;width:4px;height:4px;opacity:0.01;pointer-events:none;z-index:0';
     try{ video.srcObject=stream; }catch(e){ return; }
     document.body.appendChild(video);
     const p=video.play();
