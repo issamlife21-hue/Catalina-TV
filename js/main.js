@@ -74,24 +74,65 @@ document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible' && !_wakeLock) _tryWakeLock();
 });
 
-// Layer 2: Active-media keepalive. Captures a tiny canvas as a MediaStream and plays it muted.
-// Browsers treat pages with active playback as in-use. No sound, no controls, near-invisible.
+// Layer 2: Active-media keepalive — mimics a real media playback so TV firmware
+// (LG OLED burn-in protection etc.) and browser idle heuristics keep the page alive.
+// Video: 64x64 canvas capture at 10 fps with subtle color drift.
+// Audio: silent AudioContext oscillator routed into the same MediaStream and to the audio device.
+// MediaSession: marks the page as actively playing media (same signal YouTube uses).
+// No sound, no controls, near-invisible (opacity 0.01 in the corner).
 (function _startMediaKeepalive(){
   try{
     if(typeof ENABLE_TV_MEDIA_KEEPALIVE==='undefined' || !ENABLE_TV_MEDIA_KEEPALIVE) return;
+
+    // ── Canvas video source ──
     const canvas=document.createElement('canvas');
-    canvas.width=2; canvas.height=2;
+    canvas.width=64; canvas.height=64;
     const ctx=canvas.getContext && canvas.getContext('2d');
     if(!ctx || typeof canvas.captureStream!=='function') return;
-    let tick=0;
+    let frame=0;
     setInterval(function(){
       try{
-        ctx.fillStyle=(tick++ & 1) ? '#000' : '#010101';
-        ctx.fillRect(0,0,2,2);
+        frame++;
+        const t=frame*0.05;
+        const r=Math.max(0,Math.min(15,(Math.sin(t)*3+5)|0));
+        const g=Math.max(0,Math.min(15,(Math.sin(t+2)*3+5)|0));
+        const b=Math.max(0,Math.min(15,(Math.sin(t+4)*3+5)|0));
+        ctx.fillStyle='rgb('+r+','+g+','+b+')';
+        ctx.fillRect(0,0,64,64);
       }catch(e){}
-    },500);
-    const stream=canvas.captureStream(2);
+    },100);
+    const stream=canvas.captureStream(10);
     if(!stream) return;
+
+    // ── Silent audio track via AudioContext, merged into the same MediaStream ──
+    let audioCtx=null;
+    try{
+      const AC=window.AudioContext || window.webkitAudioContext;
+      if(AC){
+        audioCtx=new AC();
+        const osc=audioCtx.createOscillator();
+        const gain=audioCtx.createGain();
+        gain.gain.value=0.0001;
+        osc.frequency.value=20;
+        const dest=audioCtx.createMediaStreamDestination();
+        osc.connect(gain);
+        gain.connect(dest);
+        try{ gain.connect(audioCtx.destination); }catch(e){}
+        osc.start();
+        const at=dest.stream.getAudioTracks();
+        for(let i=0;i<at.length;i++){ try{ stream.addTrack(at[i]); }catch(e){} }
+        if(audioCtx.state==='suspended'){
+          const resume=function(){ try{ audioCtx.resume(); }catch(e){} };
+          resume();
+          document.addEventListener('click',resume,{once:true});
+          document.addEventListener('keydown',resume,{once:true});
+          document.addEventListener('touchstart',resume,{once:true});
+          document.addEventListener('mousedown',resume,{once:true});
+        }
+      }
+    }catch(e){ /* audio unsupported — proceed video-only */ }
+
+    // ── Hidden video element bound to the stream ──
     const video=document.createElement('video');
     video.muted=true;
     video.defaultMuted=true;
@@ -102,17 +143,44 @@ document.addEventListener('visibilitychange',function(){
     video.setAttribute('playsinline','');
     video.setAttribute('autoplay','');
     video.setAttribute('aria-hidden','true');
-    video.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0.01;pointer-events:none;z-index:0';
+    video.style.cssText='position:fixed;right:0;bottom:0;width:64px;height:64px;opacity:0.01;pointer-events:none;z-index:0';
     try{ video.srcObject=stream; }catch(e){ return; }
     document.body.appendChild(video);
     const p=video.play();
-    if(p && typeof p.catch==='function') p.catch(function(){ /* autoplay blocked — silent */ });
-    // If the browser ever pauses the element, try to resume on visibility return.
+    if(p && typeof p.catch==='function') p.catch(function(){});
+
+    // ── Watchdog: if the browser ever pauses the element, resume it ──
+    setInterval(function(){
+      try{
+        if(video.paused){
+          const r=video.play();
+          if(r && typeof r.catch==='function') r.catch(function(){});
+        }
+        if(audioCtx && audioCtx.state==='suspended'){
+          try{ audioCtx.resume(); }catch(e){}
+        }
+      }catch(e){}
+    },5000);
     document.addEventListener('visibilitychange',function(){
-      if(document.visibilityState==='visible' && video.paused){
-        try{ const r=video.play(); if(r && r.catch) r.catch(function(){}); }catch(e){}
+      if(document.visibilityState==='visible'){
+        try{ if(video.paused){ const r=video.play(); if(r && r.catch) r.catch(function(){}); } }catch(e){}
+        try{ if(audioCtx && audioCtx.state==='suspended') audioCtx.resume(); }catch(e){}
       }
     });
+
+    // ── MediaSession: the same signal YouTube uses to declare "media is playing" ──
+    try{
+      if(navigator && 'mediaSession' in navigator){
+        if(typeof window.MediaMetadata!=='undefined'){
+          navigator.mediaSession.metadata=new window.MediaMetadata({
+            title:'Catalina TV Lobby Display',
+            artist:'Catalina Landing',
+            album:'Live Display'
+          });
+        }
+        try{ navigator.mediaSession.playbackState='playing'; }catch(e){}
+      }
+    }catch(e){}
   }catch(e){ /* silent */ }
 })();
 
