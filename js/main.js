@@ -45,17 +45,19 @@ goMode(0);
   }catch(e){}
 })();
 
-// ---------- TV keep-alive (LG OLED static-screen detection) ----------
+// ---------- TV keep-awake (layered) ----------
+// Layer 3: subtle full-screen pixel motion via CSS class.
 try{
-  if(typeof ENABLE_TV_KEEPALIVE_MOTION!=='undefined' && ENABLE_TV_KEEPALIVE_MOTION){
+  if(typeof ENABLE_TV_PIXEL_MOTION_GUARD!=='undefined' && ENABLE_TV_PIXEL_MOTION_GUARD){
     document.body.classList.add('tv-keepalive');
   }
 }catch(e){}
 
-// Best-effort screen Wake Lock. Fail silently if unsupported.
+// Layer 1: Screen Wake Lock API. Best-effort, silent on unsupported/denied.
 let _wakeLock=null;
 function _tryWakeLock(){
   try{
+    if(typeof ENABLE_TV_WAKE_LOCK==='undefined' || !ENABLE_TV_WAKE_LOCK) return;
     if(navigator && navigator.wakeLock && typeof navigator.wakeLock.request==='function'){
       const p=navigator.wakeLock.request('screen');
       if(p && typeof p.then==='function'){
@@ -71,6 +73,63 @@ _tryWakeLock();
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible' && !_wakeLock) _tryWakeLock();
 });
+
+// Layer 2: Active-media keepalive. Captures a tiny canvas as a MediaStream and plays it muted.
+// Browsers treat pages with active playback as in-use. No sound, no controls, near-invisible.
+(function _startMediaKeepalive(){
+  try{
+    if(typeof ENABLE_TV_MEDIA_KEEPALIVE==='undefined' || !ENABLE_TV_MEDIA_KEEPALIVE) return;
+    const canvas=document.createElement('canvas');
+    canvas.width=2; canvas.height=2;
+    const ctx=canvas.getContext && canvas.getContext('2d');
+    if(!ctx || typeof canvas.captureStream!=='function') return;
+    let tick=0;
+    setInterval(function(){
+      try{
+        ctx.fillStyle=(tick++ & 1) ? '#000' : '#010101';
+        ctx.fillRect(0,0,2,2);
+      }catch(e){}
+    },500);
+    const stream=canvas.captureStream(2);
+    if(!stream) return;
+    const video=document.createElement('video');
+    video.muted=true;
+    video.defaultMuted=true;
+    video.playsInline=true;
+    video.loop=true;
+    video.autoplay=true;
+    video.setAttribute('muted','');
+    video.setAttribute('playsinline','');
+    video.setAttribute('autoplay','');
+    video.setAttribute('aria-hidden','true');
+    video.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0.01;pointer-events:none;z-index:0';
+    try{ video.srcObject=stream; }catch(e){ return; }
+    document.body.appendChild(video);
+    const p=video.play();
+    if(p && typeof p.catch==='function') p.catch(function(){ /* autoplay blocked — silent */ });
+    // If the browser ever pauses the element, try to resume on visibility return.
+    document.addEventListener('visibilitychange',function(){
+      if(document.visibilityState==='visible' && video.paused){
+        try{ const r=video.play(); if(r && r.catch) r.catch(function(){}); }catch(e){}
+      }
+    });
+  }catch(e){ /* silent */ }
+})();
+
+// Layer 4: Activity timer. Updates a hidden off-screen element every 20s — no synthetic input.
+(function _startActivityTimer(){
+  try{
+    if(typeof ENABLE_TV_ACTIVITY_TIMER==='undefined' || !ENABLE_TV_ACTIVITY_TIMER) return;
+    const el=document.createElement('div');
+    el.id='tv-activity';
+    el.setAttribute('aria-hidden','true');
+    el.style.cssText='position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none';
+    document.body.appendChild(el);
+    setInterval(function(){
+      try{ el.textContent=String(Date.now()); }catch(e){}
+    },20000);
+  }catch(e){ /* silent */ }
+})();
 
 // ---------- 24/7 lifecycle hardening ----------
 const PAGE_LOADED_AT=Date.now();
