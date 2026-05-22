@@ -45,7 +45,19 @@ goMode(0);
   }catch(e){}
 })();
 
-// ---------- TV keep-awake (layered) ----------
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║                       TV KEEPAWAKE SYSTEM                                  ║
+// ║                                                                            ║
+// ║  Layers, each independently toggleable via constants in js/config.js:      ║
+// ║   1. Screen Wake Lock API           — ENABLE_TV_WAKE_LOCK                  ║
+// ║   2. Active-media keepalive         — ENABLE_TV_MEDIA_KEEPALIVE            ║
+// ║   3. Full-screen pixel motion       — ENABLE_TV_PIXEL_MOTION_GUARD         ║
+// ║   4. Activity timer                 — ENABLE_TV_ACTIVITY_TIMER             ║
+// ║   5. Optional LG OLED video loop    — ENABLE_LG_OLED_TEST_KEEPALIVE        ║
+// ║      (temporary workaround for consumer LG OLEDs; not needed on            ║
+// ║      commercial displays — flip the constant to false to disable)          ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
 // Layer 3: subtle full-screen pixel motion via CSS class.
 try{
   if(typeof ENABLE_TV_PIXEL_MOTION_GUARD!=='undefined' && ENABLE_TV_PIXEL_MOTION_GUARD){
@@ -196,6 +208,53 @@ document.addEventListener('visibilitychange',function(){
     setInterval(function(){
       try{ el.textContent=String(Date.now()); }catch(e){}
     },20000);
+  }catch(e){ /* silent */ }
+})();
+
+// Layer 5 (OPTIONAL — LG OLED TEST WORKAROUND):
+// Plays a tiny real muted/looping WebM to engage the TV's hardware video-decode
+// pipeline. Temporary measure for consumer LG OLEDs; NOT required on commercial
+// displays. To remove for production: set ENABLE_LG_OLED_TEST_KEEPALIVE=false in
+// js/config.js (file under assets/media/ can also be deleted).
+(function _startLgOledKeepalive(){
+  try{
+    if(typeof ENABLE_LG_OLED_TEST_KEEPALIVE==='undefined' || !ENABLE_LG_OLED_TEST_KEEPALIVE) return;
+    if(typeof LG_OLED_KEEPALIVE_VIDEO_PATH==='undefined' || !LG_OLED_KEEPALIVE_VIDEO_PATH) return;
+    const video=document.createElement('video');
+    video.id='lg-oled-keepalive';
+    video.src=LG_OLED_KEEPALIVE_VIDEO_PATH;
+    video.muted=true;
+    video.defaultMuted=true;
+    video.loop=true;
+    video.autoplay=true;
+    video.playsInline=true;
+    video.preload='auto';
+    video.setAttribute('muted','');
+    video.setAttribute('autoplay','');
+    video.setAttribute('loop','');
+    video.setAttribute('playsinline','');
+    video.setAttribute('aria-hidden','true');
+    // Visible but near-imperceptible: 128x72 at opacity 0.02, top-left corner,
+    // pinned behind the vignette layer. NOT display:none / visibility:hidden —
+    // those would let some TVs ignore the element entirely.
+    video.style.cssText='position:fixed;left:0;top:0;width:128px;height:72px;opacity:0.02;pointer-events:none;z-index:0;background:transparent';
+    document.body.appendChild(video);
+    const p=video.play();
+    if(p && typeof p.catch==='function') p.catch(function(){});
+    // Resume on visibility return + a periodic watchdog.
+    document.addEventListener('visibilitychange',function(){
+      if(document.visibilityState==='visible' && video.paused){
+        try{ const r=video.play(); if(r && r.catch) r.catch(function(){}); }catch(e){}
+      }
+    });
+    setInterval(function(){
+      try{
+        if(video.paused){
+          const r=video.play();
+          if(r && typeof r.catch==='function') r.catch(function(){});
+        }
+      }catch(e){}
+    },5000);
   }catch(e){ /* silent */ }
 })();
 

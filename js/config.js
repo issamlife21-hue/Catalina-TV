@@ -35,10 +35,22 @@ const EVENTS_SHEET_ID=BG_SHEET_ID;
 const EVENTS_SHEET_GID='871114333';
 
 // TV browser keep-awake layers — each can be flipped off independently.
+// These are the always-on layers safe for commercial displays.
 const ENABLE_TV_WAKE_LOCK=true;
 const ENABLE_TV_MEDIA_KEEPALIVE=true;
 const ENABLE_TV_PIXEL_MOTION_GUARD=true;
 const ENABLE_TV_ACTIVITY_TIMER=true;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OPTIONAL LG OLED TEST WORKAROUND
+// Plays a tiny real WebM video, looped + muted, to engage the TV's hardware
+// video-decode pipeline. Use only on consumer LG OLEDs that aggressively dim
+// the screen for "burn-in protection". NOT REQUIRED for commercial displays.
+// To remove on commercial deploys: set ENABLE_LG_OLED_TEST_KEEPALIVE=false
+// (and optionally delete assets/media/tv-keepalive.webm).
+// ─────────────────────────────────────────────────────────────────────────────
+const ENABLE_LG_OLED_TEST_KEEPALIVE=true;
+const LG_OLED_KEEPALIVE_VIDEO_PATH='assets/media/tv-keepalive.webm';
 
 const WX_COND={0:'Clear',1:'Mostly Clear',2:'Partly Cloudy',3:'Overcast',45:'Fog',48:'Freezing Fog',51:'Light Drizzle',53:'Drizzle',55:'Heavy Drizzle',61:'Light Rain',63:'Moderate Rain',65:'Heavy Rain',71:'Light Snow',73:'Moderate Snow',75:'Heavy Snow',80:'Showers',81:'Rain Showers',82:'Heavy Showers',95:'Thunderstorm',96:'Thunderstorm',99:'Severe Storm'};
 const WX_SHORT={0:'Clear',1:'Mostly Clear',2:'Pt. Cloudy',3:'Overcast',45:'Fog',48:'Fog',51:'Drizzle',53:'Drizzle',55:'Rain',61:'Rain',63:'Rain',65:'Rain',71:'Snow',73:'Snow',75:'Snow',80:'Showers',81:'Showers',82:'Showers',95:'Storm',96:'Storm',99:'Storm'};
