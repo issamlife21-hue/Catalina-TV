@@ -61,8 +61,8 @@ body.cursor-active{cursor:default}
 .sec-pill,#dir-foot,#evt-foot,#photo-pill{background:var(--g);border-radius:var(--radius);}
 
 /* Logo */
-#logo{padding:10px 16px;min-height:96px;display:flex;flex-direction:row;align-items:center;pointer-events:all}
-#logo-mark,#logo-mark-light{display:block;height:96px;width:auto;max-width:320px;object-fit:contain}
+#logo{padding:10px 16px;min-height:96px;max-height:96px;display:flex;flex-direction:row;align-items:center;justify-content:center;pointer-events:all}
+#logo-mark,#logo-mark-light{display:block;height:76px;width:auto;max-width:140px;object-fit:contain}
 /* Default (dark theme): show white logo, hide navy */
 #logo-mark{display:none}
 #logo-mark-light{display:block}
