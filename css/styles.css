@@ -67,29 +67,16 @@ body.cursor-active{cursor:default}
   display:flex;
   align-items:center;
   justify-content:flex-start;
+  gap:14px;
   overflow:hidden;
   pointer-events:all;
   box-sizing:border-box;
   flex:0 0 auto;
 }
-#logo img{
-  display:none;
-  height:clamp(52px,3.75vw,84px) !important;
-  width:auto !important;
-  max-width:clamp(160px,12vw,240px) !important;
-  max-height:clamp(52px,3.75vw,84px) !important;
-  object-fit:contain;
-  flex:0 0 auto;
-}
-/* Default = dark theme: show white logo only */
-#logo-mark-light{display:block !important}
-#logo-mark{display:none !important}
-/* Light theme: show navy logo only */
-body.light #logo-mark{display:block !important}
-body.light #logo-mark-light{display:none !important}
-/* Navy + OG: white logo (same as default) */
-body.navy #logo-mark, body.og #logo-mark{display:none !important}
-body.navy #logo-mark-light, body.og #logo-mark-light{display:block !important}
+#logo-mark{display:block;height:52px;width:52px;object-fit:contain;color:var(--gold)}
+#logo-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.1}
+#logo-name{font-family:'Poppins',sans-serif;font-weight:400;font-size:20px;letter-spacing:0.2em;color:var(--ink);text-transform:uppercase}
+#logo-sub{font-family:'Poppins',sans-serif;font-weight:300;font-size:12px;letter-spacing:0.34em;color:var(--gold);text-transform:uppercase}
 
 /* Clock */
 #clock-wrap{padding:10px 16px;width:var(--hud-pill-w);min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;flex:0 0 auto;box-sizing:border-box}
