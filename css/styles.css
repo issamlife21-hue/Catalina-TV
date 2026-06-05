@@ -51,7 +51,7 @@ body.cursor-active{cursor:default}
 
 /* ── HUD ── */
 #hud{position:fixed;top:0;right:0;bottom:0;left:0;z-index:20;display:flex;flex-direction:column;pointer-events:none}
-#hud-top{display:flex;justify-content:space-between;align-items:stretch;padding:14px 32px;--hud-pill-w:380px}
+#hud-top{display:flex;justify-content:space-between;align-items:stretch;padding:14px 32px;--hud-pill-w:clamp(300px,20vw,440px)}
 #hud-bot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:10px 32px 14px}
 
 /* ── GLASS PILL (shared) ── */
@@ -74,10 +74,10 @@ body.cursor-active{cursor:default}
 }
 #logo img{
   display:none;
-  height:72px !important;
+  height:clamp(52px,3.75vw,84px) !important;
   width:auto !important;
-  max-width:240px !important;
-  max-height:72px !important;
+  max-width:clamp(160px,12vw,240px) !important;
+  max-height:clamp(52px,3.75vw,84px) !important;
   object-fit:contain;
   flex:0 0 auto;
 }
@@ -93,9 +93,9 @@ body.navy #logo-mark-light, body.og #logo-mark-light{display:block !important}
 
 /* Clock */
 #clock-wrap{padding:10px 16px;width:var(--hud-pill-w);min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;flex:0 0 auto;box-sizing:border-box}
-#clk-time{font-family:'Poppins',sans-serif;font-weight:300;font-size:52px;color:var(--ink);line-height:1;letter-spacing:0.03em}
-#clk-date{font-family:'Poppins',sans-serif;font-weight:300;font-size:13px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:3px;white-space:nowrap}
-#greeting{font-family:'Poppins',sans-serif;font-weight:500;font-size:13px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;transition:opacity 0.6s var(--ease)}
+#clk-time{font-family:'Poppins',sans-serif;font-weight:300;font-size:clamp(38px,2.7vw,60px);color:var(--ink);line-height:1;letter-spacing:0.03em}
+#clk-date{font-family:'Poppins',sans-serif;font-weight:300;font-size:clamp(10px,0.68vw,15px);letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:3px;white-space:nowrap}
+#greeting{font-family:'Poppins',sans-serif;font-weight:500;font-size:clamp(10px,0.68vw,15px);letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;transition:opacity 0.6s var(--ease)}
 #greeting.fading{opacity:0}
 
 /* Tabs */
