@@ -4,7 +4,7 @@
 // External data (weather, Google Sheets) is never cached here —
 // the app handles those with localStorage fallbacks.
 
-const CACHE_NAME = 'catalina-tv-v1';
+const CACHE_NAME = 'catalina-tv-v2';
 
 const APP_SHELL = [
   '/',
@@ -22,7 +22,7 @@ const APP_SHELL = [
   '/js/settings.js',
   '/js/darkmode.js',
   '/js/main.js',
-  '/assets/images/demo-logo.svg',
+  '/assets/images/logo.png',
 ];
 
 // ─── INSTALL: cache all app shell files ───────────────────────────────────────
