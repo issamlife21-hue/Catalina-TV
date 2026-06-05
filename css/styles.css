@@ -61,19 +61,11 @@ body.cursor-active{cursor:default}
 .sec-pill,#dir-foot,#evt-foot,#photo-pill{background:var(--g);border-radius:var(--radius);}
 
 /* Logo */
-#logo{padding:10px 16px;min-height:96px;max-height:96px;display:flex;flex-direction:row;align-items:center;justify-content:center;pointer-events:all}
-#logo-mark,#logo-mark-light{display:block;height:76px;width:auto;max-width:140px;object-fit:contain}
-/* Default (dark theme): show white logo, hide navy */
-#logo-mark{display:none}
-#logo-mark-light{display:block}
-/* Light theme: show navy logo, hide white */
-body.light #logo-mark{display:block}
-body.light #logo-mark-light{display:none}
-/* Navy & OG themes: show white logo (same as dark) */
-body.navy #logo-mark, body.og #logo-mark{display:none}
-body.navy #logo-mark-light, body.og #logo-mark-light{display:block}
-#logo-text{display:none}
-#logo-name,#logo-sub{display:none}
+#logo{padding:10px 16px;min-height:96px;display:flex;flex-direction:row;align-items:center;gap:14px;pointer-events:all}
+#logo-mark{display:block;height:52px;width:52px;object-fit:contain;color:var(--gold)}
+#logo-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.1}
+#logo-name{font-family:'Poppins',sans-serif;font-weight:400;font-size:20px;letter-spacing:0.2em;color:var(--ink);text-transform:uppercase}
+#logo-sub{font-family:'Poppins',sans-serif;font-weight:300;font-size:12px;letter-spacing:0.34em;color:var(--gold);text-transform:uppercase}
 
 /* Clock */
 #clock-wrap{padding:10px 16px;min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end}
