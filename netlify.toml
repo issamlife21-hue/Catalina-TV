@@ -1,0 +1,33 @@
+# ─── Catalina TV — Netlify Configuration ──────────────────────────────────────
+
+[build]
+  publish = "."
+
+# Never cache index.html — ensures TVs always get the latest deploy immediately
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Never cache the service worker — must always be fresh
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Cache JS and CSS aggressively — they're versioned by the SW cache name
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache assets (images, media)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

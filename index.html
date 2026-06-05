@@ -3,25 +3,21 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"/>
-<title>Catalina TV Demo 6.2 — The Waterfront at Catalina Landing</title>
+<title>Catalina TV — The Waterfront at Catalina Landing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&family=Hind:wght@300;400;500;600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
 
 <div id="bg"></div>
 <div id="vig"></div>
-<div id="tv-keepalive" aria-hidden="true"></div>
-<div id="tv-debug" style="display:none"></div>
 
 <div id="hud">
   <div id="hud-top">
     <div id="logo">
-      <!-- DEMO LOGO: temporary placeholder mark. Swap the src below to install the real logo. -->
       <div id="logo-mark-wrap">
-        <div id="logo-demo-tag">Demo Logo</div>
-        <img id="logo-mark" src="assets/images/demo-logo.svg" alt="" data-demo="true"/>
+        <img id="logo-mark" src="assets/images/demo-logo.svg" alt=""/>
       </div>
       <div id="logo-text">
         <div id="logo-name">The Waterfront</div>
@@ -95,51 +91,71 @@
 
 </div>
 
+<!-- SETTINGS GEAR -->
 <button id="settings-btn" type="button" aria-label="Settings" aria-haspopup="true" aria-expanded="false">
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="3"/>
     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
   </svg>
 </button>
+
 <div id="settings-menu" role="menu">
   <div class="settings-header">Settings</div>
 
   <div class="settings-group">
+
+    <!-- BUILDING SELECTOR -->
+    <div class="settings-row settings-stack">
+      <span class="settings-label">Display Building</span>
+      <div class="chips-row">
+        <button class="theme-opt" data-building="310" type="button">310</button>
+        <button class="theme-opt" data-building="320" type="button">320</button>
+        <button class="theme-opt" data-building="330" type="button">330</button>
+        <button class="theme-opt" data-building="340" type="button">340</button>
+        <button class="theme-opt" data-building="" type="button">All</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+
     <div class="settings-row settings-stack">
       <span class="settings-label">Theme</span>
       <div class="chips-row">
-        <button class="theme-opt" data-theme="dark" type="button">Dark</button>
+        <button class="theme-opt" data-theme="dark"  type="button">Dark</button>
         <button class="theme-opt" data-theme="light" type="button">Light</button>
-        <button class="theme-opt" data-theme="navy" type="button">Navy</button>
-        <button class="theme-opt" data-theme="og" type="button">OG</button>
+        <button class="theme-opt" data-theme="navy"  type="button">Navy</button>
+        <button class="theme-opt" data-theme="og"    type="button">OG</button>
       </div>
     </div>
+
     <div class="settings-row settings-stack">
       <span class="settings-label">Property Title Position</span>
       <div class="chips-row">
-        <button class="theme-opt" data-prop-pos="top" type="button">Top</button>
+        <button class="theme-opt" data-prop-pos="top"    type="button">Top</button>
         <button class="theme-opt" data-prop-pos="center" type="button">Center</button>
         <button class="theme-opt" data-prop-pos="bottom" type="button">Bottom</button>
       </div>
     </div>
+
     <div class="settings-row settings-stack">
       <span class="settings-label">Panel Solidness</span>
       <div class="slider-row">
         <input id="panel-solidness" type="range" min="0.4" max="1.6" step="0.02" value="1" aria-label="Panel solidness"/>
-        <div class="slider-tick" aria-hidden="true" title="Default"></div>
+        <div class="slider-tick" aria-hidden="true"></div>
       </div>
     </div>
+
     <div class="settings-row">
       <span class="settings-label">Rounded Corners</span>
-      <button class="ios-switch" data-toggle="round" type="button" aria-pressed="false"></button>
+      <button class="ios-switch" data-toggle="round"    type="button" aria-pressed="false"></button>
     </div>
     <div class="settings-row">
       <span class="settings-label">Weather Icons</span>
-      <button class="ios-switch" data-toggle="icons" type="button" aria-pressed="true"></button>
+      <button class="ios-switch" data-toggle="icons"    type="button" aria-pressed="true"></button>
     </div>
     <div class="settings-row">
       <span class="settings-label">Show Events</span>
-      <button class="ios-switch" data-toggle="events" type="button" aria-pressed="true"></button>
+      <button class="ios-switch" data-toggle="events"   type="button" aria-pressed="true"></button>
     </div>
     <div class="settings-row">
       <span class="settings-label">Daylight Mode</span>
@@ -150,23 +166,31 @@
   <div class="settings-divider"></div>
 
   <div class="settings-group">
-    <button id="edit-info-btn" class="settings-action" type="button"><span>Edit Building Info</span><span class="chevron">›</span></button>
+    <button id="edit-info-btn" class="settings-action" type="button">
+      <span>Edit Building Info</span><span class="chevron">›</span>
+    </button>
   </div>
 
   <div class="settings-divider"></div>
 
   <div class="settings-group">
-    <button id="fullscreen-btn" class="settings-action" type="button"><span id="fullscreen-label">Enter Fullscreen</span><span class="chevron">⛶</span></button>
-    <button id="change-pc-btn" class="settings-action" type="button"><span>Change Passcode</span><span class="chevron">›</span></button>
+    <button id="fullscreen-btn" class="settings-action" type="button">
+      <span id="fullscreen-label">Enter Fullscreen</span><span class="chevron">⛶</span>
+    </button>
+    <button id="change-pc-btn" class="settings-action" type="button">
+      <span>Change Passcode</span><span class="chevron">›</span>
+    </button>
   </div>
 </div>
 
+<!-- SHARED MODAL BACKDROP -->
 <div id="eed-backdrop"></div>
 
+<!-- PASSCODE MODAL -->
 <div id="passcode-modal" role="dialog" aria-modal="true">
   <div class="pc-shell">
     <div id="pc-title" class="pc-title">Enter Passcode</div>
-    <div id="pc-sub" class="pc-sub"></div>
+    <div id="pc-sub"   class="pc-sub"></div>
     <div class="pc-dots">
       <span class="pc-dot"></span>
       <span class="pc-dot"></span>
@@ -178,24 +202,26 @@
   </div>
 </div>
 
+<!-- INFO EDITOR MODAL -->
 <div id="info-editor" role="dialog" aria-modal="true" aria-labelledby="ied-heading">
   <div id="ied-modal">
     <div id="ied-header">
       <h2 id="ied-heading">Edit Building Info</h2>
       <button id="ied-close" type="button" aria-label="Close">&times;</button>
     </div>
-    <p id="ied-intro">Edit the building name, address, footer contact lines, and the Property panel title shown throughout the display.</p>
+    <p id="ied-intro">Edit the building name, address, footer lines, and property panel text.</p>
     <div id="info-editor-grid"></div>
     <div id="ied-footer">
-      <button id="ied-reset" type="button">Reset to defaults</button>
+      <button id="ied-reset"  type="button">Reset to defaults</button>
       <div id="ied-footer-right">
         <button id="ied-cancel" type="button">Cancel</button>
-        <button id="ied-save" type="button">Save</button>
+        <button id="ied-save"   type="button">Save</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- SCRIPTS — order matters -->
 <script src="js/config.js"></script>
 <script src="js/clock.js"></script>
 <script src="js/background.js"></script>
@@ -206,6 +232,7 @@
 <script src="js/info.js"></script>
 <script src="js/passcode.js"></script>
 <script src="js/settings.js"></script>
+<script src="js/darkmode.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
