@@ -61,21 +61,40 @@ body.cursor-active{cursor:default}
 .sec-pill,#dir-foot,#evt-foot,#photo-pill{background:var(--g);border-radius:var(--radius);}
 
 /* Logo */
-/* Logo */
-#logo{padding:10px 20px;height:96px;display:flex;align-items:center;pointer-events:all}
-#logo-mark,#logo-mark-light{display:block;height:76px;width:auto;max-width:240px;object-fit:contain}
-/* Default = dark theme: white logo */
-#logo-mark{display:none}
-#logo-mark-light{display:block}
-/* Light theme: navy logo */
-body.light #logo-mark{display:block}
-body.light #logo-mark-light{display:none}
-/* Navy + OG themes: white logo (same as default dark) */
-body.navy #logo-mark, body.og #logo-mark{display:none}
-body.navy #logo-mark-light, body.og #logo-mark-light{display:block}
+#logo{
+  padding:10px 20px;
+  height:96px;
+  width:auto;
+  max-width:280px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  overflow:hidden;
+  pointer-events:all;
+  box-sizing:border-box;
+  flex:0 0 auto;
+}
+#logo img{
+  display:none;
+  height:72px !important;
+  width:auto !important;
+  max-width:240px !important;
+  max-height:72px !important;
+  object-fit:contain;
+  flex:0 0 auto;
+}
+/* Default = dark theme: show white logo only */
+#logo-mark-light{display:block !important}
+#logo-mark{display:none !important}
+/* Light theme: show navy logo only */
+body.light #logo-mark{display:block !important}
+body.light #logo-mark-light{display:none !important}
+/* Navy + OG: white logo (same as default) */
+body.navy #logo-mark, body.og #logo-mark{display:none !important}
+body.navy #logo-mark-light, body.og #logo-mark-light{display:block !important}
 
 /* Clock */
-#clock-wrap{padding:10px 16px;min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end}
+#clock-wrap{padding:10px 16px;min-height:96px;text-align:right;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;flex:0 0 auto}
 #clk-time{font-family:'Poppins',sans-serif;font-weight:300;font-size:52px;color:var(--ink);line-height:1;letter-spacing:0.03em}
 #clk-date{font-family:'Poppins',sans-serif;font-weight:300;font-size:13px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;margin-top:3px}
 #greeting{font-family:'Poppins',sans-serif;font-weight:500;font-size:13px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;transition:opacity 0.6s var(--ease)}
