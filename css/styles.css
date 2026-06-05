@@ -62,7 +62,16 @@ body.cursor-active{cursor:default}
 
 /* Logo */
 #logo{padding:10px 16px;min-height:96px;display:flex;flex-direction:row;align-items:center;pointer-events:all}
-#logo-mark{display:block;height:72px;width:auto;max-width:260px;object-fit:contain}
+#logo-mark,#logo-mark-light{display:block;height:96px;width:auto;max-width:320px;object-fit:contain}
+/* Default (dark theme): show white logo, hide navy */
+#logo-mark{display:none}
+#logo-mark-light{display:block}
+/* Light theme: show navy logo, hide white */
+body.light #logo-mark{display:block}
+body.light #logo-mark-light{display:none}
+/* Navy & OG themes: show white logo (same as dark) */
+body.navy #logo-mark, body.og #logo-mark{display:none}
+body.navy #logo-mark-light, body.og #logo-mark-light{display:block}
 #logo-text{display:none}
 #logo-name,#logo-sub{display:none}
 
