@@ -44,7 +44,8 @@ function parseEventsCSV(text) {
     time:   header.indexOf('time'),
     loc:    header.indexOf('location'),
     desc:   header.indexOf('description'),
-    rank:   header.indexOf('rank'),
+    // 'priority' is the current sort column; 'rank' kept as legacy fallback
+    rank:   header.indexOf('priority') >= 0 ? header.indexOf('priority') : header.indexOf('rank'),
     active: header.indexOf('active'),
     // Notes intentionally not read — internal use only
   };
@@ -57,10 +58,10 @@ function parseEventsCSV(text) {
     const title = (row[idx.title] || '').trim();
     if (!title) continue;
 
-    // Skip inactive rows
+    // Skip only explicitly inactive rows; blank active = show
     if (idx.active >= 0) {
       const v = (row[idx.active] || '').trim().toUpperCase();
-      if (v !== 'TRUE' && v !== 'YES' && v !== '1' && v !== 'ON') continue;
+      if (v === 'FALSE' || v === '0' || v === 'NO' || v === 'OFF') continue;
     }
 
     const rankVal = idx.rank >= 0 ? parseInt(row[idx.rank] || '99', 10) : 99;

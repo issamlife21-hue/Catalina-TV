@@ -29,6 +29,14 @@ const BG_SHEET_GID       = '589321751';    // Backgrounds tab
 const EVENTS_SHEET_GID   = '871114333';    // Events tab
 const SETTINGS_SHEET_GID = '2028632494';   // Settings tab
 
+// Per-building Directory tabs (one tab per building)
+const DIRECTORY_GIDS = {
+  '310': '1627497967',
+  '320': '702701545',
+  '330': '1856569291',
+  '340': '1644683988',
+};
+
 // Aliases
 const EVENTS_SHEET_ID = SHEET_ID;
 const BG_SHEET_ID     = SHEET_ID;

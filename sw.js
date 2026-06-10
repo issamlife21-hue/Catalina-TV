@@ -4,7 +4,7 @@
 // External data (weather, Google Sheets) is never cached here —
 // the app handles those with localStorage fallbacks.
 
-const CACHE_NAME = 'catalina-tv-v10';
+const CACHE_NAME = 'catalina-tv-v11';
 
 const APP_SHELL = [
   '/',
